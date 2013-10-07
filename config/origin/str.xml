@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<StrTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Str>
+		<ID>1</ID>
+		<V>login</V>
+	</Str>
+	<Str></Str>
+</StrTab>

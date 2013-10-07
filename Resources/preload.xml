@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<preload version="1.0">
+<dict>
+	<key>icons/mainMenu.png</key>
+	<dict>
+		<key>type</key>
+		<integer>2</integer>
+		<key>size</key>
+		<integer>61130</integer>
+	</dict>
+	<key>icons/icons.png</key>
+	<dict>
+		<key>type</key>
+		<integer>2</integer>
+		<key>size</key>
+		<integer>11112</integer>
+	</dict>
+	<key>mainScene/background.jpg</key>
+	<dict>
+		<key>type</key>
+		<integer>1</integer>
+		<key>size</key>
+		<integer>52705</integer>
+	</dict>
+	<key>mainScene/popUp.png</key>
+	<dict>
+		<key>type</key>
+		<integer>1</integer>
+		<key>size</key>
+		<integer>17543</integer>
+	</dict>
+	<key>mainScene/account.png</key>
+	<dict>
+		<key>type</key>
+		<integer>1</integer>
+		<key>size</key>
+		<integer>22826</integer>
+	</dict>
+</dict>
+</preload>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ShopTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Shop>
+		<ShopID>1001</ShopID>
+		<PayType>1</PayType>
+		<PriceShow>1</PriceShow>
+		<PriceReal>1</PriceReal>
+		<ItemType>1</ItemType>
+		<ItemNum>1</ItemNum>
+		<Limit></Limit>
+	</Shop>
+	<Shop></Shop>
+</ShopTab>

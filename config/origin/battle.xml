@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BattleTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Battle>
+		<BattleID>1</BattleID>
+		<Units>1</Units>
+		<Item>1001</Item>
+		<Expr>1</Expr>
+		<Gold>1</Gold>
+		<MapID>1</MapID>
+		<BackGroundID>1</BackGroundID>
+		<Desc>this is a battle</Desc>
+	</Battle>
+	<Battle></Battle>
+
+</BattleTab>

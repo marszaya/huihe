@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EquipTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Equip>
+		<SubType>1001</SubType>
+		<Positon>1</Positon>
+		<AttrIdx>1</AttrIdx>
+		<AttrValue>1</AttrValue>
+		<AttrLevelupValue>1</AttrLevelupValue>
+	</Equip>
+	<Equip></Equip>
+</EquipTab>

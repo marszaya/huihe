@@ -1,0 +1,23 @@
+option optimize_for = LITE_RUNTIME;
+
+import "config.proto";
+
+message Experience
+{
+	optional int64 expr = 1;
+	optional int32 level = 2;
+	optional int64 levelExpr = 3;
+}
+
+message Identity
+{
+	optional string id = 1;
+	optional string name = 2;
+}
+
+message ParameterPair
+{
+	optional ConfigDefine.VAL_TYPE vtype = 1;
+	optional string val = 2;
+	optional string name = 3;
+}

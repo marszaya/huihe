@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BookInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Book>
+		<ISBN>989-0-487-04641-2</ISBN>
+		<Title>My World</Title>
+		<Author>Nancy Davolio</Author>
+		<Quantity>121</Quantity>
+	</Book>
+	<Book></Book>
+</BookInfo>

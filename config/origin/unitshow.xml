@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<UnitShowTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<UnitShow>
+		<ShowType>1</ShowType>
+		<Ranged>1</Ranged>
+		<Bullet>t3.1 (1).png</Bullet>
+	</UnitShow>
+	<UnitShow></UnitShow>
+</UnitShowTab>

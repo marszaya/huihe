@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ItemPackTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<ItemPack>
+		<PackID>1001</PackID>
+		<PackType>1</PackType>
+		<Item0>1001:1</Item0>
+		<Item1></Item1>
+		<Item2></Item2>
+		<Item3></Item3>
+		<Item4></Item4>
+		<Item5></Item5>
+		<Item6></Item6>
+		<Item7></Item7>
+		<Item8></Item8>
+		<Item9></Item9>
+	</ItemPack>
+	<ItemPack></ItemPack>
+</ItemPackTab>

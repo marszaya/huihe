@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MapTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Map>
+		<MapID>1</MapID>
+		<Battles>1</Battles>
+		<BackgroundID>1</BackgroundID>
+		<Desc>0</Desc>
+	</Map>
+	<Map></Map>
+</MapTab>

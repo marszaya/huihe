@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SkillTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Skill>
+		<ID>1</ID>
+		<Kind>1</Kind>
+		<Type>1</Type>
+		<Cost>1</Cost>
+		<Chance>100</Chance>
+		<Params>1</Params>
+		<NAME>121</NAME>
+	</Skill>
+	<Skill />
+</SkillTab>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<appconf version="1.0">
+<dict>
+	<key>metadata</key>
+	<dict>
+		<key>format</key>
+		<integer>1</integer>
+	</dict>
+	<key>data</key>
+	<dict>
+		<key>myResourceRoot</key>
+		<string>../../../Resources</string>
+		<key>myFramePerS</key>
+		<integer>30</integer>
+	</dict>
+</dict>
+</appconf>

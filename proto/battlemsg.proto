@@ -1,0 +1,82 @@
+option optimize_for = LITE_RUNTIME;
+
+import "role.proto";
+
+message BattleUnitIdxDef
+{
+	enum IdxDef
+	{
+		UNIT_IDX_ALIAS_ALL=0;
+		UNIT_IDX_ALIAS_HOME_TEAM=1;
+		UNIT_IDX_ALIAS_AWAY_TEAM=2;
+		UINT_IDX_HOME_BEGIN=100;
+		UNIT_IDX_AWAY_BEGIN=200;
+	}
+}
+
+message BattleAction
+{
+	enum BattleActionType
+	{
+		ACTION_DMG=1;
+		ACTION_HEAL=2;
+		ACTION_BUFF=3;
+		ACTION_SKILL=4;
+	}
+	
+	optional BattleActionType type = 1;
+	optional int32 id=2;
+	optional int32 srcunitidx=3;
+	repeated int32 dstunitidxes=4;
+	repeated bytes params=5;
+	repeated BattleAction subactions=6;
+}
+
+message BattleUnit
+{
+	optional int32 idx=1;
+	optional int32 posIdx=2; //³öÕ½Î»
+	optional Role roleinfo=3;
+}
+
+message BattleTeam
+{
+	repeated BattleUnit units=1;
+}
+
+message BattleInitState
+{
+	optional BattleTeam hometeam=1;
+	optional BattleTeam awayteam=2;
+}
+
+message BattleInitBuff
+{
+	optional BattleAction homebuffs=1;
+	optional BattleAction awaybuffs=2;
+}
+
+message BattleRound
+{
+	repeated BattleAction actions=1;
+}
+
+message BattleDetail
+{
+	repeated BattleRound rounds=1;
+}
+
+message BattleResult
+{
+	optional int32 win=1;
+}
+
+message BattleRecord
+{
+	optional int32 version = 1;
+	optional string type = 2;
+	optional BattleInitState initstate=3;
+	optional BattleInitBuff initbuff = 4;
+	optional BattleDetail detail = 5;
+	optional BattleResult result=6;
+}

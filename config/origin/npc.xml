@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<NPCTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<NPC>
+		<ID>1</ID>
+		<ShowType>1</ShowType>
+		<AttrID>1</AttrID>
+		<AttrPercent>100</AttrPercent>
+		<Skills>1,2,3</Skills>
+		<NAME>121</NAME>
+	</NPC>
+	<NPC />
+</NPCTab>

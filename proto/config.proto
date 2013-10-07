@@ -1,0 +1,15 @@
+option optimize_for = LITE_RUNTIME;
+
+message ConfigDefine
+{
+	enum ATTR_CONFIG{
+		DEF_FACTOR=100;
+		RATE_BASE=1000;
+	}
+	
+	enum VAL_TYPE{
+		VAL_TYPE_STRING=1;
+		VAL_TYPE_INT32=2;
+		VAL_TYPE_INT64=3;
+	}
+}

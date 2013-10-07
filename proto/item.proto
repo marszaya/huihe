@@ -1,0 +1,44 @@
+option optimize_for = LITE_RUNTIME;
+
+import "common.proto";
+
+
+message Item
+{
+	enum MajorType{
+		MAJOR_TYPE_NORMAL=0;
+		MAJOR_TYPE_USABLE=1;
+		MAJOR_TYPE_EQUIP=2;
+		MAJOR_TYPE_VIRTUAL=999;
+	};
+	
+	enum EffectType{
+		EFFECT_NONE=0;
+		EFFECT_EXP=1;
+		EFFECT_GOLD=2;
+		EFFECT_MONEY=3;
+		EFFECT_HP=11;
+		EFFECT_ARMOR=12;
+		EFFECT_AD=13;
+		EFFECT_SPD=14;
+		EFFECT_PACKED=999;
+	};
+	
+	enum PayType{
+		PAY_GOLD=1;
+		PAY_MOENY=2;
+	};
+	
+	optional Identity id = 1;
+	optional int32 num = 2;
+	optional Experience expr = 3;
+	optional int64 timelimit = 4;
+	optional int32 subtype = 5; //具体类别
+	optional bytes customdata = 10;
+}
+
+message ItemSet
+{
+	repeated Item items = 1;
+	optional int32 maxid = 100;
+}

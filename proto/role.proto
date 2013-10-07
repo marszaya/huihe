@@ -1,0 +1,68 @@
+option optimize_for = LITE_RUNTIME;
+
+import "common.proto";
+import "item.proto";
+
+message Equip
+{
+	enum POSITION_IDX{
+		HELMET=0;
+		ARMOR=1;
+		WEAPON=2;
+		AMULET=3;
+		END=4;
+	};
+	repeated Item items = 1; //装备id列表
+}
+
+message BattleSkill
+{
+	enum SKILL_TYPE{
+		PHYSICAL_DAMAGE=1;
+	};
+	repeated int32 ids = 1; //技能id列表
+}
+
+message BattleAttr
+{
+	optional int32 hp=1; //health point 血量
+	optional int32 ad=2; //attack damage 物伤
+	optional int32 ap=3; //ability power 法伤
+	optional int32 arm=4; //armor 物理抵抗
+	optional int32 mr=5; //magic resistance 魔法抵抗
+	optional int32 ms=6; //move speed 移动速度（不用）
+	optional int32 as=7; //attack speed 攻击速度
+	optional int32 cr=8; //critical rate base on config.RATE_BASE 暴击
+	optional int32 hr=9; //hit rate 命中
+	optional int32 dr=10; //dodge rate 躲避
+	optional int32 armigv=11; //arm ignore val 物理抵抗固定穿透
+	optional int32 armigr=12; //arm ignore rate 物理抵抗百分比穿透
+	optional int32 mrigv=13; //mr ignore val 魔法抵抗固定穿透
+	optional int32 mrigr=14; //mr ignore rate 魔法抵抗百分比穿透
+	optional int32 energy=15; //能量值
+}
+
+message Role
+{
+	optional Identity id = 1; //Id
+	optional Experience expr=2; //经验
+	optional BattleAttr battr=3; //战斗数值
+	optional int32 ismain=4; //是否主将
+	optional int32 showtype=5; //形象类型id
+	optional Equip equip = 6; //装备
+	optional BattleSkill skill = 7; //拥有的技能
+	optional int32 hireflag=100; //是否已经招募，酒馆专用
+}
+
+message RoleSet
+{
+	repeated Role roles = 1; //拥有的将
+	optional int32 mainroleidx = 2; //主将idx
+	repeated Identity battlelist = 3; //出战队列列表
+	optional int32 battlelistmax = 4; //出战最大数量
+	repeated Role shopRoles = 5; //酒馆可招募的将领
+	optional int32 maxid = 100; //将领id生成器
+}
+
+
+

@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+
+# for windows
+*.lib
+*.dll
+*.obj
+*.tlog
+*.log

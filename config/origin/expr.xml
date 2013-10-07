@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExprTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Expr>
+		<Level>1</Level>
+		<LevelExpr>100</LevelExpr>
+		<BaseExpr>100</BaseExpr>
+	</Expr>
+	<Expr></Expr>
+</ExprTab>

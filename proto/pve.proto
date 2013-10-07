@@ -1,0 +1,5 @@
+message PveInfo
+{
+	optional int32 curmap=1;
+	optional int32 curbattle=2;
+}

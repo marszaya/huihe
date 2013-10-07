@@ -1,0 +1,24 @@
+option optimize_for = LITE_RUNTIME;
+
+import "common.proto";
+import "item.proto";
+import "role.proto";
+import "pve.proto";
+
+message Account
+{
+	optional int64 gold = 2;
+	optional int64 money = 3;
+	optional Experience expr = 4;
+	optional Experience vip = 5;
+}
+
+message User
+{
+	optional Identity id = 1;
+	optional Account account = 2;
+	optional RoleSet role = 3;
+	optional ItemSet item = 4;
+	optional PveInfo pve = 5;
+	optional int32 version = 100;
+}

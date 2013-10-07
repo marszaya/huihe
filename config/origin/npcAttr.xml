@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<NPCAttrTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<NPCAttr>
+		<ID>1</ID>
+		<HP>300</HP>
+		<ATK>Nancy Davolio</ATK>
+		<DEF>50</DEF>
+		<SPD>100</SPD>
+		<ENERGY>200</ENERGY>
+	</NPCAttr>
+	<NPCAttr></NPCAttr>
+</NPCAttrTab>
