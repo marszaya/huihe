@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{97C88832-A25B-4CEF-AB10-FCC8A06DBA96}</ProjectGuid>
+    <RootNamespace>projecthuihe</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>ouput\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>huihe</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>ouput\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>huihe</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>D:\工作区\win8 dev\protobufoutput\inc;..\libccmyext\inc;..\inc;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>libprotobuf.lib;libprotobuf-lite.lib;libccmyext.lib;opengl32.lib;glew32.lib;libcocos2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\工作区\win8 dev\protobufoutput\lib\$(Configuration)\;$(SolutionDir)$(Configuration).win32\;..\libccmyext\project-ccmyext\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>D:\工作区\win8 dev\protobufoutput\inc;..\libccmyext\inc;..\inc;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>libprotobuf-lite.lib;libccmyext.lib;opengl32.lib;glew32.lib;libcocos2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\工作区\win8 dev\protobufoutput\lib\$(Configuration)\;$(SolutionDir)$(Configuration).win32\;..\libccmyext\project-ccmyext\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inc\AccountWindow.h" />
+    <ClInclude Include="..\inc\AppDelegate.h" />
+    <ClInclude Include="..\inc\AppMacros.h" />
+    <ClInclude Include="..\inc\AttrLabel.h" />
+    <ClInclude Include="..\inc\AutoBattleTab.h" />
+    <ClInclude Include="..\inc\AutoEquipTab.h" />
+    <ClInclude Include="..\inc\AutoExprTab.h" />
+    <ClInclude Include="..\inc\AutoItemPackTab.h" />
+    <ClInclude Include="..\inc\AutoItemTab.h" />
+    <ClInclude Include="..\inc\AutoMapTab.h" />
+    <ClInclude Include="..\inc\AutoNPCAttrTab.h" />
+    <ClInclude Include="..\inc\AutoNPCTab.h" />
+    <ClInclude Include="..\inc\AutoShopTab.h" />
+    <ClInclude Include="..\inc\AutoSkillTab.h" />
+    <ClInclude Include="..\inc\AutoStrTab.h" />
+    <ClInclude Include="..\inc\AutoUnitShowTab.h" />
+    <ClInclude Include="..\inc\BagWindow.h" />
+    <ClInclude Include="..\inc\BagWindowBase.h" />
+    <ClInclude Include="..\inc\BagWindowEquip.h" />
+    <ClInclude Include="..\inc\BattleFightLogic.h" />
+    <ClInclude Include="..\inc\BattleFightMsg.h" />
+    <ClInclude Include="..\inc\BattleFightTeam.h" />
+    <ClInclude Include="..\inc\BattleFightUnit.h" />
+    <ClInclude Include="..\inc\BattleFormatConf.h" />
+    <ClInclude Include="..\inc\BattleMap.h" />
+    <ClInclude Include="..\inc\BattleMapScene.h" />
+    <ClInclude Include="..\inc\battlemsg.pb.h" />
+    <ClInclude Include="..\inc\BattleProcedureAttack.h" />
+    <ClInclude Include="..\inc\BattleProcedureAttackRaged.h" />
+    <ClInclude Include="..\inc\BattleResult.h" />
+    <ClInclude Include="..\inc\BattleScene.h" />
+    <ClInclude Include="..\inc\BattleSkillName.h" />
+    <ClInclude Include="..\inc\BattleWindow.h" />
+    <ClInclude Include="..\inc\common.pb.h" />
+    <ClInclude Include="..\inc\config.pb.h" />
+    <ClInclude Include="..\inc\DataUtil.h" />
+    <ClInclude Include="..\inc\FightEffect.h" />
+    <ClInclude Include="..\inc\FightUnit.h" />
+    <ClInclude Include="..\inc\item.pb.h" />
+    <ClInclude Include="..\inc\ItemUnit.h" />
+    <ClInclude Include="..\inc\LoginScene.h" />
+    <ClInclude Include="..\inc\LoginWindow.h" />
+    <ClInclude Include="..\inc\mail.pb.h" />
+    <ClInclude Include="..\inc\main.h" />
+    <ClInclude Include="..\inc\MainLoadingScene.h" />
+    <ClInclude Include="..\inc\MainScene.h" />
+    <ClInclude Include="..\inc\MyControl.h" />
+    <ClInclude Include="..\inc\MyData.h" />
+    <ClInclude Include="..\inc\projectConfig.h" />
+    <ClInclude Include="..\inc\pve.pb.h" />
+    <ClInclude Include="..\inc\PveMap.h" />
+    <ClInclude Include="..\inc\resource.h" />
+    <ClInclude Include="..\inc\role.pb.h" />
+    <ClInclude Include="..\inc\RoleBattleFormat.h" />
+    <ClInclude Include="..\inc\RoleBattleList.h" />
+    <ClInclude Include="..\inc\RoleDetail.h" />
+    <ClInclude Include="..\inc\RoleEquip.h" />
+    <ClInclude Include="..\inc\RoleHire.h" />
+    <ClInclude Include="..\inc\RoleSelect.h" />
+    <ClInclude Include="..\inc\RoleUnit.h" />
+    <ClInclude Include="..\inc\RoleUpgrade.h" />
+    <ClInclude Include="..\inc\RoleWindow.h" />
+    <ClInclude Include="..\inc\ShopWindow.h" />
+    <ClInclude Include="..\inc\StdViewFactory.h" />
+    <ClInclude Include="..\inc\STRTABLE.h" />
+    <ClInclude Include="..\inc\SwitchTouchWindow.h" />
+    <ClInclude Include="..\inc\tconf.pb.h" />
+    <ClInclude Include="..\inc\tconfHelper.h" />
+    <ClInclude Include="..\inc\tconfManager.h" />
+    <ClInclude Include="..\inc\user.pb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\AccountWindow.cpp" />
+    <ClCompile Include="..\src\AppDelegate.cpp" />
+    <ClCompile Include="..\src\AttrLabel.cpp" />
+    <ClCompile Include="..\src\BagWindow.cpp" />
+    <ClCompile Include="..\src\BagWindowBase.cpp" />
+    <ClCompile Include="..\src\BagWindowEquip.cpp" />
+    <ClCompile Include="..\src\BattleFightLogic.cpp" />
+    <ClCompile Include="..\src\BattleFightMsg.cpp" />
+    <ClCompile Include="..\src\BattleFightTeam.cpp" />
+    <ClCompile Include="..\src\BattleFightUnit.cpp" />
+    <ClCompile Include="..\src\BattleFormatConf.cpp" />
+    <ClCompile Include="..\src\BattleMap.cpp" />
+    <ClCompile Include="..\src\BattleMapScene.cpp" />
+    <ClCompile Include="..\src\battlemsg.pb.cc" />
+    <ClCompile Include="..\src\BattleProcedureAttack.cpp" />
+    <ClCompile Include="..\src\BattleProcedureAttackReaged.cpp" />
+    <ClCompile Include="..\src\BattleResult.cpp" />
+    <ClCompile Include="..\src\BattleScene.cpp" />
+    <ClCompile Include="..\src\BattleSkillName.cpp" />
+    <ClCompile Include="..\src\BattleWindow.cpp" />
+    <ClCompile Include="..\src\common.pb.cc" />
+    <ClCompile Include="..\src\config.pb.cc" />
+    <ClCompile Include="..\src\DataUtil.cpp" />
+    <ClCompile Include="..\src\FightEffect.cpp" />
+    <ClCompile Include="..\src\FightUnit.cpp" />
+    <ClCompile Include="..\src\item.pb.cc" />
+    <ClCompile Include="..\src\ItemUnit.cpp" />
+    <ClCompile Include="..\src\LoginScene.cpp" />
+    <ClCompile Include="..\src\LoginWindow.cpp" />
+    <ClCompile Include="..\src\mail.pb.cc" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\MainLoadingScene.cpp" />
+    <ClCompile Include="..\src\MainScene.cpp" />
+    <ClCompile Include="..\src\MyControl.cpp" />
+    <ClCompile Include="..\src\MyData.cpp" />
+    <ClCompile Include="..\src\pve.pb.cc" />
+    <ClCompile Include="..\src\PveMap.cpp" />
+    <ClCompile Include="..\src\role.pb.cc" />
+    <ClCompile Include="..\src\RoleBattleFormat.cpp" />
+    <ClCompile Include="..\src\RoleBattleList.cpp" />
+    <ClCompile Include="..\src\RoleDetail.cpp" />
+    <ClCompile Include="..\src\RoleEquip.cpp" />
+    <ClCompile Include="..\src\RoleHire.cpp" />
+    <ClCompile Include="..\src\RoleSelect.cpp" />
+    <ClCompile Include="..\src\RoleUnit.cpp" />
+    <ClCompile Include="..\src\RoleUpgrade.cpp" />
+    <ClCompile Include="..\src\RoleWindow.cpp" />
+    <ClCompile Include="..\src\ShopWindow.cpp" />
+    <ClCompile Include="..\src\StdViewFactory.cpp" />
+    <ClCompile Include="..\src\STRTABLE.cpp" />
+    <ClCompile Include="..\src\SwitchTouchWindow.cpp" />
+    <ClCompile Include="..\src\tconf.pb.cc" />
+    <ClCompile Include="..\src\tconfHelper.cpp" />
+    <ClCompile Include="..\src\tconfManager.cpp" />
+    <ClCompile Include="..\src\user.pb.cc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

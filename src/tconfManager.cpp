@@ -54,18 +54,18 @@ void CTconfManager::setConf(const char* confName, CTconfHelper* conf)
 
 int CTconfManager::loadAll(const char* configDir)
 {
-	TCONF_LOAD(CAutoBattleTab, string(configDir).append("conf/battle.bin").c_str(), 0);
-	TCONF_LOAD(CAutoNPCTab, string(configDir).append("conf/npc.bin").c_str(), 0);
-	TCONF_LOAD(CAutoNPCAttrTab, string(configDir).append("conf/npcAttr.bin").c_str(), 0);
-	TCONF_LOAD(CAutoItemTab, string(configDir).append("conf/item.bin").c_str(), 0);
-	TCONF_LOAD(CAutoExprTab, string(configDir).append("conf/expr.bin").c_str(), 0);
-	TCONF_LOAD(CAutoStrTab, string(configDir).append("conf/str.bin").c_str(), 0);
-	TCONF_LOAD(CAutoEquipTab, string(configDir).append("conf/equip.bin").c_str(), 0);
-	TCONF_LOAD(CAutoShopTab, string(configDir).append("conf/shop.bin").c_str(), 0);
-	TCONF_LOAD(CAutoItemPackTab, string(configDir).append("conf/itempack.bin").c_str(), 0);
-	TCONF_LOAD(CAutoMapTab, string(configDir).append("conf/map.bin").c_str(), 0);
-	TCONF_LOAD(CAutoSkillTab, string(configDir).append("conf/skill.bin").c_str(), 0);
-	TCONF_LOAD(CAutoUnitShowTab, string(configDir).append("conf/unitshow.bin").c_str(), 0);
+	TCONF_LOAD(CAutoBattleTab, string(configDir).append("/conf/battle.bin").c_str(), 0);
+	TCONF_LOAD(CAutoNPCTab, string(configDir).append("/conf/npc.bin").c_str(), 0);
+	TCONF_LOAD(CAutoNPCAttrTab, string(configDir).append("/conf/npcAttr.bin").c_str(), 0);
+	TCONF_LOAD(CAutoItemTab, string(configDir).append("/conf/item.bin").c_str(), 0);
+	TCONF_LOAD(CAutoExprTab, string(configDir).append("/conf/expr.bin").c_str(), 0);
+	TCONF_LOAD(CAutoStrTab, string(configDir).append("/conf/str.bin").c_str(), 0);
+	TCONF_LOAD(CAutoEquipTab, string(configDir).append("/conf/equip.bin").c_str(), 0);
+	TCONF_LOAD(CAutoShopTab, string(configDir).append("/conf/shop.bin").c_str(), 0);
+	TCONF_LOAD(CAutoItemPackTab, string(configDir).append("/conf/itempack.bin").c_str(), 0);
+	TCONF_LOAD(CAutoMapTab, string(configDir).append("/conf/map.bin").c_str(), 0);
+	TCONF_LOAD(CAutoSkillTab, string(configDir).append("/conf/skill.bin").c_str(), 0);
+	TCONF_LOAD(CAutoUnitShowTab, string(configDir).append("/conf/unitshow.bin").c_str(), 0);
 
 	return 0;
 }

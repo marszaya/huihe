@@ -282,7 +282,8 @@ void CBattleTeamLogic::clearAct()
 {
 	for(int i=0; i<this->m_unitsLen; ++i)
 	{
-		this->m_units[i]->setActed(false);
+		if(this->m_units[i] != NULL)
+			this->m_units[i]->setActed(false);
 	}
 }
 

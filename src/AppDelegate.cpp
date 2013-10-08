@@ -48,14 +48,14 @@ bool AppDelegate::applicationDidFinishLaunching()
     pDirector->setOpenGLView(pEGLView);
 
 	CCSize frameSize = pEGLView->getFrameSize();
-
+/*
     // Set the design resolution
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT) || (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionShowAll);
 #else
     pEGLView->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, kResolutionNoBorder);
 #endif
-
+*/
 	
 	 vector<string> searchPath;
     // In this demo, we select resource according to the frame's height.
@@ -64,7 +64,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     // this can make sure that the resource's height could fit for the height of design resolution.
 
     // if the frame's height is larger than the height of medium resource size, select large resource.
-	if (frameSize.height > mediumResource.size.height)
+/*	if (frameSize.height > mediumResource.size.height)
 	{
         searchPath.push_back(largeResource.directory);
 
@@ -84,7 +84,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
         pDirector->setContentScaleFactor(MIN(smallResource.size.height/designResolutionSize.height, smallResource.size.width/designResolutionSize.width));
     }
-
+	*/
 #ifdef _DEBUG
     // turn on display FPS
     pDirector->setDisplayStats(true);

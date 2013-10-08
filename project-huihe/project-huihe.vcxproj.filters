@@ -1,0 +1,444 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\data">
+      <UniqueIdentifier>{d96debcc-e067-411e-a745-17d1b875f174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view">
+      <UniqueIdentifier>{4475d5c1-10e0-41a5-9b11-1fc0730960cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\control">
+      <UniqueIdentifier>{9d9064f0-0923-41cb-84ad-8b830e1ebcda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\bag">
+      <UniqueIdentifier>{8469ba75-0f1b-4242-85ca-2e776a05712a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\battle">
+      <UniqueIdentifier>{d6c84eaf-b579-4c79-977d-90ca08daa2f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\common">
+      <UniqueIdentifier>{a89148cd-a0c8-4c96-93b9-ec60c38bccd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\data\battle">
+      <UniqueIdentifier>{424b64d1-0299-4bb3-8d98-58c137a25a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\role">
+      <UniqueIdentifier>{7cf293d3-e67c-4b11-b4f5-3424f47b8b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\shop">
+      <UniqueIdentifier>{5af5048f-7bc6-49b3-821d-4a978b84e5a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\support">
+      <UniqueIdentifier>{20255072-a8a7-4b59-8a2f-a0f2e33706e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\tconf">
+      <UniqueIdentifier>{d43eb924-bda2-4f0c-bbea-e4fc80bdb967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\login">
+      <UniqueIdentifier>{10b230d6-eabb-48c8-966e-3c4d8d163fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\main">
+      <UniqueIdentifier>{4690d332-7f80-49db-9d04-de9c302d02e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\battle\selectStage">
+      <UniqueIdentifier>{0ac4b9fc-452e-4fe9-8e80-d5f597d2f7dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\battle\fighting">
+      <UniqueIdentifier>{d318901a-6a0a-4bae-b9ae-5962c58b66c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\view\battle\fighting\procedure">
+      <UniqueIdentifier>{a9d9a3c6-2ade-4212-acf8-0dbc0385c37d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inc\AccountWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AppDelegate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AttrLabel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoBattleTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoEquipTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoExprTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoItemPackTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoItemTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoMapTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoNPCAttrTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoNPCTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoShopTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoSkillTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoStrTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoUnitShowTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BagWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BagWindowBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BagWindowEquip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleFightLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleFightMsg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleFightTeam.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleFightUnit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleFormatConf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleMapScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\battlemsg.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleProcedureAttack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleProcedureAttackRaged.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleResult.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleSkillName.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\common.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\config.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\DataUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\FightEffect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\FightUnit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\item.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ItemUnit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\LoginScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\LoginWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\mail.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\MainLoadingScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\MainScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\MyControl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\MyData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\projectConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\pve.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\PveMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\role.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleBattleFormat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleBattleList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleDetail.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleEquip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleHire.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleSelect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleUnit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleUpgrade.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\RoleWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ShopWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\StdViewFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\STRTABLE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\SwitchTouchWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\tconf.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\tconfHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\tconfManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\user.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AppMacros.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\AppDelegate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tconf.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\user.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\role.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pve.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\config.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\item.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mail.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\battlemsg.pb.cc">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DataUtil.cpp">
+      <Filter>源文件\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyData.cpp">
+      <Filter>源文件\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyControl.cpp">
+      <Filter>源文件\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BagWindow.cpp">
+      <Filter>源文件\view\bag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BagWindowEquip.cpp">
+      <Filter>源文件\view\bag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BagWindowBase.cpp">
+      <Filter>源文件\view\bag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleProcedureAttack.cpp">
+      <Filter>源文件\view\battle\fighting\procedure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleProcedureAttackReaged.cpp">
+      <Filter>源文件\view\battle\fighting\procedure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FightUnit.cpp">
+      <Filter>源文件\view\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FightEffect.cpp">
+      <Filter>源文件\view\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemUnit.cpp">
+      <Filter>源文件\view\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleFightLogic.cpp">
+      <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleFightMsg.cpp">
+      <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleFightTeam.cpp">
+      <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleBattleFormat.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleWindow.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleBattleList.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleDetail.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleEquip.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleHire.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleSelect.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleUnit.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RoleUpgrade.cpp">
+      <Filter>源文件\view\role</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShopWindow.cpp">
+      <Filter>源文件\view\shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\STRTABLE.cpp">
+      <Filter>源文件\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SwitchTouchWindow.cpp">
+      <Filter>源文件\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StdViewFactory.cpp">
+      <Filter>源文件\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleFormatConf.cpp">
+      <Filter>源文件\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tconfHelper.cpp">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tconfManager.cpp">
+      <Filter>源文件\tconf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AttrLabel.cpp">
+      <Filter>源文件\view\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LoginScene.cpp">
+      <Filter>源文件\view\login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LoginWindow.cpp">
+      <Filter>源文件\view\login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MainScene.cpp">
+      <Filter>源文件\view\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AccountWindow.cpp">
+      <Filter>源文件\view\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MainLoadingScene.cpp">
+      <Filter>源文件\view\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleMapScene.cpp">
+      <Filter>源文件\view\battle\selectStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PveMap.cpp">
+      <Filter>源文件\view\battle\selectStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleFightUnit.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleMap.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleWindow.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleSkillName.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleScene.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleResult.cpp">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
