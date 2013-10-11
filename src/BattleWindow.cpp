@@ -149,6 +149,8 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 		m_logic.initBattle();
 		debugCache << "LOGIC=" << pcal->getDtStr() << "|";
 
+		CC_BREAK_IF(m_map->initTeamFromMsg(m_logic.getMsg())!=0);
+
 		this->setCloseBtn(CStdViewFactory::createCloseBtn(this, menu_selector(CBattleWindow::onClose)));
 
 		m_pbtnNext = CCMyHelper::createImgButton(
