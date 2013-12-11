@@ -100,17 +100,6 @@ bool CBattleProcedureAttackRaged::nextStep(int stepToCheck)
 	}
 	else if(stepToCheck == 11)
 	{
-		//受击打结束
-		CBattleFightUnit* punit = pMap->getFightUnit(this->m_dstTag);
-		if(punit)
-		{
-			if(punit->isDead())
-			{
-				//死了就删掉
-				pMap->removeFightUnit(this->m_dstTag);
-			}
-		}
-
 		m_dstDone = true;
 		if(m_srcDone && m_dstDone)
 		{

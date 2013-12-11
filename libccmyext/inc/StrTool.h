@@ -14,7 +14,7 @@ public:
 	static string strHex(int num);
 	static string strHexLL(long long num);
 	static long long strToLL(const char* str);
-	//目前只支持\n
+	//目前只支持\n $1-n 对应vars中变量
 	static string escapeStr(const char* str, vector<string>* pVars=NULL);
 
 	//delm是字符集合",:"表示遇到,或者:就分割

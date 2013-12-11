@@ -5,11 +5,15 @@
 #include "AttrLabel.h"
 #include "STRTABLE.h"
 #include "MyControl.h"
+#include "DEFINED_VALUES.h"
+#include "StrTool.h"
 
 CRoleHire::CRoleHire(void)
 {
 	this->initPostMsg(CMyControl::getSharedControl()->getDispatcher());
 	this->addPostMsg(CMyControl::CMD_DATA_ROLE_HIRED);
+	this->addPostMsg(CMyControl::CMD_DATA_ROLE_HIRED_NO_MONEY);
+	this->addPostMsg(CMyControl::CMD_DATA_UNIT_OWN_MAX);
 }
 
 CRoleHire::~CRoleHire(void)
@@ -31,6 +35,7 @@ CRoleHire* CRoleHire::create()
 
 bool CRoleHire::initCRoleHire()
 {
+	m_dialog = NULL;
 	bool ret=false;
 	do{
 		int windowWidth = 700;
@@ -66,7 +71,10 @@ bool CRoleHire::initCRoleHire()
 		this->getTableWindow()->setWindowBG(tableBg);
 		CCMyHelper::setPosC(this->getTableWindow(), windowWidth/2, windowHeight-tableWinH/2-60);
 		
-		this->updateLabel(-1, CONST_STR_LABEL_REFESHHIRE, 
+		vector<string> theargs;
+		theargs.push_back(CStrTool::strDecimal(DEFINED_VALUE_HIRE_REFRESH_COST));
+		this->updateLabel(-1, 
+			CStrTool::escapeStr(CONST_STR_LABEL_REFESHHIRE, &theargs).c_str(), 
 			CStdViewFactory::LABEL_FONT,
 				CCMyHelper::POS_INFO(
 					windowWidth/2-100, 40, CCMyHelper::POSITION_TYPE_CENTER
@@ -185,16 +193,31 @@ CCWindowBase* CRoleHire::createItemWindow(int idx)
 		CCMyHelper::setPosBL(speedlabel, labelStartX+labelDeltaX, labelStartY);
 		pwin->addChild(speedlabel);
 
-		//btn
-		if(prole->hireflag() == 0)
+		
+		if(prole->hireflag() != 0)
 		{
+			//未招募过，显示招募按钮和价格
+			CAutoUnitRandomTab* pconfur = TCONF_GET(CAutoUnitRandomTab);
+			if(pconfur == NULL)
+				break;
+
+			int goldNeed = atoi(pconfur->getValue(CStrTool::strDecimal(prole->hireflag()).c_str(),pconfur->GOLD)); 
+
+			CAttrLabel* plabel = CAttrLabel::createGoldLabel(goldNeed);
+			if(plabel == NULL)
+				break;
+
+			CCMyHelper::setPosC(plabel, cellWidth/2, btnHeight/2);
+			pwin->addChild(plabel);
+
 			CCMenu* btn = CStdViewFactory::createBtn(this, menu_selector(CRoleHire::onHire), 
-				CONST_STR_BTN_HIRE, idx, cellWidth/2, btnHeight/2);
+				CONST_STR_BTN_HIRE, idx, cellWidth-30, btnHeight/2);
 
 			pwin->addChild(btn);
 		}
 		else
 		{
+			//显示已经招募
 			pwin->updateLabel(-1, CONST_STR_BTN_HIRED, CStdViewFactory::LABEL_FONT,
 				CCMyHelper::POS_INFO(
 					cellWidth/2, btnHeight/2, CCMyHelper::POSITION_TYPE_CENTER
@@ -227,8 +250,45 @@ void CRoleHire::onFrameMsg(CCObject* msg)
 	{
 		CMyControl::getSharedControl()->invokeCmd(CMyControl::CMD_MAINSCENE_POPUPCLOSE, this);
 	}
-	else
+	else if(cmd == CMyControl::CMD_DATA_ROLE_HIRED)
 	{
 		updateCCEItemContainer();
 	}
+	else if(cmd == CMyControl::CMD_DATA_ROLE_HIRED_NO_MONEY)
+	{
+		if(m_dialog)
+		{
+			this->removeChild(m_dialog);
+			m_dialog = NULL;
+		}
+		m_dialog = CStdViewFactory::createDialog("not enough money",
+			CCUCommonDelegate::create(this, callfuncO_selector(CRoleHire::onDialogueClose)),
+			CStdViewFactory::DIALOG_TYPE_ALERT
+		);
+
+		CCMyHelper::setPosC(m_dialog, this->getWindowWidth()/2, this->getWindowHeight()/2);
+		this->addChild(m_dialog);
+	}
+	else if(cmd == CMyControl::CMD_DATA_UNIT_OWN_MAX)
+	{
+		if(m_dialog)
+		{
+			this->removeChild(m_dialog);
+			m_dialog = NULL;
+		}
+
+		m_dialog = CStdViewFactory::createDialog("can't hire any more",
+			CCUCommonDelegate::create(this, callfuncO_selector(CRoleHire::onDialogueClose)),
+			CStdViewFactory::DIALOG_TYPE_ALERT
+		);
+
+		CCMyHelper::setPosC(m_dialog, this->getWindowWidth()/2, this->getWindowHeight()/2);
+		this->addChild(m_dialog);
+	}
+}
+
+void CRoleHire::onDialogueClose(CCObject* p)
+{
+	this->removeChildOnNextFrame(m_dialog);
+	m_dialog = NULL;
 }

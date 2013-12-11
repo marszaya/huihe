@@ -111,6 +111,9 @@
     <ClCompile Include="..\src\StrTool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CSlideWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\CActionEffectAfterImage.h">
@@ -210,6 +213,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\StrTool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\CSlideWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

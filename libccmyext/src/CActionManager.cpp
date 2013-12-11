@@ -41,6 +41,7 @@ void CCEActionManager::onActionNotify(CCObject* obj)
 	{
 		if(!p->nextStep(param->m_stepID))
 		{
+			onProcedureEnd(p->m_procedureTag);
 			removeProcedure(p->m_procedureTag);
 		}
 	}
@@ -55,6 +56,7 @@ int CCEActionManager::startProcedure(CCEActionProcedure* p)
 	p->bindManager(this);
 	if(!p->nextStep(0))
 	{
+		onProcedureEnd(p->m_procedureTag);
 		removeProcedure(p->m_procedureTag);
 	}
 	return 0;

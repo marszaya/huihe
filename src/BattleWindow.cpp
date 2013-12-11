@@ -131,6 +131,7 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 	ostringstream debugCache;
 	bool ret=false;
 	do{
+		//全屏加载地图
 		this->fullWindowSize();
 		char sbackName[64] = {0};
 		sprintf(sbackName, "battle/battleback%d.jpg", backgroundId);
@@ -139,6 +140,7 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 		this->setWindowBG(pbg);
 		debugCache << "BG=" << pcal->getDtStr() << "|";
 
+		//战斗地图
 		m_map = CBattleWindowMap::create(CBattleFormatConf::getSharedInstance()->getYMax(),
 			CBattleFormatConf::getSharedInstance()->getXMax()*2+2, 90, 150);
 		CC_BREAK_IF(!m_map);
@@ -146,32 +148,38 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 		this->addChild(m_map);
 		debugCache << "MAP=" << pcal->getDtStr() << "|";
 
+		//控制播放速度
+		m_spd = CBattleSpeed::create();
+		CC_BREAK_IF(!m_spd);
+		CCMyHelper::setPosBL(m_spd, 15, 530);
+		this->addChild(m_spd);
+		m_map->bindSpd(m_spd);
+
+		//暂时使用本地计算
 		m_logic.initBattle();
 		debugCache << "LOGIC=" << pcal->getDtStr() << "|";
 
+		//初始化map中的team
 		CC_BREAK_IF(m_map->initTeamFromMsg(m_logic.getMsg())!=0);
 
+		//关闭按钮
 		this->setCloseBtn(CStdViewFactory::createCloseBtn(this, menu_selector(CBattleWindow::onClose)));
 
+		//单步按钮
 		m_pbtnNext = CCMyHelper::createImgButton(
 			"battle/nextNor.png", this, menu_selector(CBattleWindow::onNext), 1,
 			NULL, "battle/nextDis.png",  50, 500);
 		CC_BREAK_IF(!m_pbtnNext);
 		this->addChild(m_pbtnNext);
 
+		//自动战斗按钮
 		m_pbtnAuto = CCMyHelper::createImgButton(
 			"battle/auto.png", this, menu_selector(CBattleWindow::onAuto), 1,
 			NULL, NULL,  50, 450);
 		CC_BREAK_IF(!m_pbtnAuto);
 		this->addChild(m_pbtnAuto);
 
-		m_spd = CBattleSpeed::create();
-		CC_BREAK_IF(!m_spd);
-		CCMyHelper::setPosBL(m_spd, 15, 530);
-		this->addChild(m_spd);
-
-		m_map->bindSpd(m_spd);
-
+		//关闭战斗结果框
 		CMyControl::getSharedControl()->registCmdHandle(
 			CMyControl::CMD_BATTLE_RESULT_CLOSE,
 			this, callfuncO_selector(CBattleWindow::onClose));		
@@ -180,6 +188,8 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 
 		this->m_map->debugString(debugCache.str().c_str());
 
+		//预先执行一步
+		m_nextFlag = 1;
 		//注册update
 		this->scheduleUpdate();
 
@@ -191,6 +201,7 @@ bool CBattleWindow::initCBattleWindow(int backgroundId)
 
 void CBattleWindow::onClose(CCObject* obj)
 {
+	this->unscheduleUpdate();
 	this->postMsgDirect(CMyControl::CMD_WINDOW_SELF_LOOP, NULL);
 }
 
@@ -201,7 +212,6 @@ void CBattleWindow::onNext(CCObject* obj)
 		//m_map->debugString("doNextRound");
 		m_nextFlag = 1;
 		this->disableNext();
-		m_logic.doGameStep();
 	}
 }
 
@@ -211,32 +221,38 @@ void CBattleWindow::onAuto(CCObject* obj)
 	{
 		//start auto
 		m_autoFlag = 1;
-		onNext(NULL);
+		this->disableAuto();
+		this->disableNext();
 	}
 	else
 	{
 		//stop auto
 		m_autoFlag = 0;
-		this->checkNextEnable();
+		this->enableAuto();
 	}
 }
 
-void CBattleWindow::disableAllMenu()
+void CBattleWindow::disableAuto()
 {
-	if(m_pbtnNext)
-	{
-		m_pbtnAuto->setEnabled(false);
-	}
-
 	if(m_pbtnAuto)
 	{
-		m_pbtnAuto->setEnabled(false);
+		DYNAMIC_CAST_CCASERT(m_pbtnAuto->getChildByTag(1), CCMenuItem, p);
+		p->setEnabled(false);
 	}
 }
 
-void CBattleWindow::checkNextEnable()
+void CBattleWindow::enableAuto()
 {
-	if(m_nextFlag==0 && m_autoFlag == 0 && m_pbtnNext)
+	if(m_pbtnAuto)
+	{
+		DYNAMIC_CAST_CCASERT(m_pbtnAuto->getChildByTag(1), CCMenuItem, p);
+		p->setEnabled(true);
+	}
+}
+
+void CBattleWindow::enableNext()
+{
+	if(m_pbtnNext)
 	{
 		DYNAMIC_CAST_CCASERT(m_pbtnNext->getChildByTag(1), CCMenuItem, p);
 		p->setEnabled(true);
@@ -285,6 +301,13 @@ void CBattleWindow::onFrameMsg(CCObject* msg)
 
 void CBattleWindow::update(float dt)
 {
+	//next flag是1的时候执行一次
+	if(m_nextFlag == 1)
+	{
+		m_logic.doGameStep();
+		m_nextFlag = 0;
+	}
+
 	if(!m_map->isPlaying())
 	{
 		//可以继续播放了
@@ -294,17 +317,20 @@ void CBattleWindow::update(float dt)
 			//没什么可以播放的了
 			if(this->m_logic.isEnd()) //已经结束
 			{
-				this->disableAllMenu();
+				this->disableAuto();
+				this->disableNext();			
 				this->showResult();
 				return;
 			}
 
-			m_nextFlag = 0;
-			checkNextEnable();
-
-			if(m_autoFlag != 0)//自动点击
-			{			
-				onNext(NULL);
+			//可以继续执行一步
+			if(m_autoFlag==1)
+			{
+				m_nextFlag = 1;
+			}
+			else
+			{
+				this->enableNext();
 			}
 		}
 	}

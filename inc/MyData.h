@@ -110,9 +110,14 @@ protected:
 	bool startTransaction();
 	void submitTransaction();
 	void rollbackTransaction();
+	//缓存event
 	void throwEvent(int cmd);
+	//将events发送出去
+	void postEventsToControl();
 
-	Role* createNewRole(RoleSet* rs, int showType, int whichArray=0);
+	//unitid >=0 指定id创建，否则随机一个
+	//whichArray=0直接添加到列表，否则放到旅馆
+	Role* createNewRole(RoleSet* rs,  int unitid, int whichArray=0);
 
 	void updateBattleList();
 

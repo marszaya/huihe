@@ -1,6 +1,7 @@
 #include "BattleMap.h"
 #include "CMyHelper.h"
 #include "BattleWindow.h"
+#include "BattleProcedureBeCast.h"
 #include "BattleProcedureAttack.h"
 #include "BattleProcedureAttackRaged.h"
 #include "logToFile.h"
@@ -71,6 +72,7 @@ int CBattleWindowMap::addFightUnit(int unitId, int x, int y, bool flip, CBattleU
 		pnewUnit->bindManager(this);
 
 		retTag = this->createCustomTag();
+		pdata->tagId = retTag;
 		m_ptable->addItem(pnewUnit, y, x, retTag);
 		pnewUnit->updateHp();
 	}while(0);
@@ -238,6 +240,16 @@ void CBattleWindowMap::showBullets(const char* bulletConf,
 	}while(0);
 }
 
+void CBattleWindowMap::showDmg(int tagId, int dmg, int skillid)
+{
+	CBattleProcedureBeCast* pp = CBattleProcedureBeCast::create();
+	pp->m_tag = tagId;
+	pp->m_dmg = dmg;
+	pp->m_skillId = skillid;
+	this->startProcedure(pp);
+}
+
+
 bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 {
 	//还在播放中
@@ -267,36 +279,91 @@ bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 		//解析pact
 		int acttype = pact->type();
 		
-		if(acttype== pact->ACTION_DMG || acttype==pact->ACTION_SKILL)
+		if(acttype== pact->ACTION_DMG)
 		{
 			CBattleUnitLogic* psrc = this->getUnitLogicByMsgIdx(pact->srcunitidx());
 			if(psrc == NULL)
 				break;
 
-			if(pact->dstunitidxes_size() == 0)
+			if(pact->params_size() == 0)
 				break;
-			CBattleUnitLogic* pdst = this->getUnitLogicByMsgIdx(pact->dstunitidxes(0));
+			psrc->energy = atoi(pact->params(0).c_str());//同步能量
+
+			if(pact->subactions_size() == 0)
+				break;
+
+			BattleAction* psubact = pact->mutable_subactions(0);
+			CBattleUnitLogic* pdst = this->getUnitLogicByMsgIdx(psubact->dstunitidxes(0));
+			if(pdst == NULL)
+				break;
+
+			if(psubact->params_size() !=2)
+				break;
+
+			int dmg = atoi(psubact->params(0).c_str());
+			pdst->hp = atoi(psubact->params(1).c_str());//同步血量
+			doAttack(psrc->tagId, pdst->tagId, dmg, pact->id());
+			m_isPlaying = true;
+		}
+		else if(acttype==pact->ACTION_DIE)
+		{
+			CBattleUnitLogic* psrc = this->getUnitLogicByMsgIdx(pact->srcunitidx());
+			if(psrc == NULL)
+				break;
+			this->removeFightUnit(psrc->tagId);
+		}
+		else if(acttype == pact->ACTION_BECAST)
+		{
+			CBattleUnitLogic* psrc = this->getUnitLogicByMsgIdx(pact->srcunitidx());
 			if(psrc == NULL)
 				break;
 
-			if(pact->params_size() !=2)
+			if(pact->params_size() < 1)
 				break;
 
-			int dmg = atoi(pact->params(0).c_str());
-			pdst->hp = atoi(pact->params(1).c_str());//同步血量
-			if(acttype == pact->ACTION_SKILL)
+			if(pact->params(0) == "3") //伤血的表现
 			{
-				doAttack(psrc->tagId, pdst->tagId, dmg, pact->id());
+				if(pact->params_size() != 4)
+					break;
+
+				//fromIdx = pact->params(1)
+				this->showDmg(psrc->tagId, atoi(pact->params(2).c_str()));
+				psrc->hp = atoi(pact->params(3).c_str());
+				CBattleFightUnit* punit = getFightUnit(psrc->tagId);
+				if(punit == NULL)
+					break;
+				punit->updateHp();
 			}
-			else
-			{
-				doAttack(psrc->tagId, pdst->tagId, dmg);
-			}
+			m_isPlaying = true;
+		}
+		else if(acttype == pact->ACTION_BUFF_BEGIN)
+		{
+			if(pact->dstunitidxes_size() == 0)
+				break;
+			CBattleUnitLogic* psrc = this->getUnitLogicByMsgIdx(pact->dstunitidxes(0));
+			if(psrc == NULL)
+				break;
+			CBattleFightUnit* punit = getFightUnit(psrc->tagId);
+			if(punit == NULL)
+				break;
+			punit->addBuffIcon(pact->id(), pact->srcunitidx());
+		}
+		else if(acttype == pact->ACTION_BUFF_END)
+		{
+			if(pact->dstunitidxes_size() == 0)
+				break;
+			CBattleUnitLogic* psrc = this->getUnitLogicByMsgIdx(pact->dstunitidxes(0));
+			if(psrc == NULL)
+				break;
+			CBattleFightUnit* punit = getFightUnit(psrc->tagId);
+			if(punit == NULL)
+				break;
+			punit->delBuffIcon(pact->id(), pact->srcunitidx());
 		}
 		else
 			break;
 
-		m_isPlaying = true;
+		
 	}while(0);
 	
 	return true;
@@ -356,7 +423,7 @@ int CBattleWindowMap::initTeamFromMsg(CBattleFightMsg& msg)
 		if(initTeamFromMsgTeam(pstate->mutable_hometeam(),m_hometeam,false)!=0)
 			break;
 
-		if(initTeamFromMsgTeam(pstate->mutable_hometeam(),m_awayteam,true)!=0)
+		if(initTeamFromMsgTeam(pstate->mutable_awayteam(),m_awayteam,true)!=0)
 			break;
 
 		ret = 0;

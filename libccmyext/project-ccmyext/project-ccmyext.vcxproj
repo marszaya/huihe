@@ -101,6 +101,7 @@
     <ClCompile Include="..\src\CPageNav.cpp" />
     <ClCompile Include="..\src\CPreLoad.cpp" />
     <ClCompile Include="..\src\CSceneWindow.cpp" />
+    <ClCompile Include="..\src\CSlideWindow.cpp" />
     <ClCompile Include="..\src\CSpriteFillTex.cpp" />
     <ClCompile Include="..\src\CSpriteFrameAnime.cpp" />
     <ClCompile Include="..\src\CTabMenu.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="..\inc\CPageNav.h" />
     <ClInclude Include="..\inc\CPreLoad.h" />
     <ClInclude Include="..\inc\CSceneWindow.h" />
+    <ClInclude Include="..\inc\CSlideWindow.h" />
     <ClInclude Include="..\inc\CSpriteFillTex.h" />
     <ClInclude Include="..\inc\CSpriteFrameAnime.h" />
     <ClInclude Include="..\inc\CTabMenu.h" />

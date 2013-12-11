@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <list>
 #include "role.pb.h"
 #include "BattleFightMsg.h"
 
@@ -12,6 +13,43 @@ class CBattleUnitLogic
 {
 public:
 	static const int MAX_SPEED=1000000;
+	static const int MAX_BUFF_PARAM=10;
+	struct BUFF
+	{
+		int fromIdx; //使用msg中转化过的idx
+		int id;
+		int remainCnt; //剩余次数，-1=永久
+		int usedCnt; //使用过次数
+		int effectType; //效果类型
+		int param[MAX_BUFF_PARAM]; //可变参数
+
+		inline BUFF()
+		{
+			fromIdx = -1;
+			id = 0;
+			remainCnt = -1;
+			usedCnt = 0;
+			effectType = 0;
+			memset(param,0, sizeof(param));
+		}
+
+		inline void updateCnt(int cnt=1)
+		{
+			if(remainCnt >= cnt)
+			{
+				remainCnt -= cnt;
+				if(remainCnt < 0)
+					remainCnt = 0;
+			}
+
+			usedCnt += cnt;
+		}
+
+		inline bool isEnd()
+		{
+			return remainCnt==0;
+		}
+	};
 
 public:
 	CBattleUnitLogic();
@@ -75,6 +113,20 @@ public:
 		return location;
 	}
 
+	inline void dealDmg(int dmg)
+	{
+		if(hp > dmg)
+			hp -= dmg;
+		else
+		{
+			hp = 0;
+			alive = false;
+		}
+	}
+
+public:
+	typedef list<BUFF> TYPE_BUFF_LIST;
+
 public:
 	int showtype;
 	int hp;
@@ -85,6 +137,7 @@ public:
 	int cd;
 	int energy;
 	vector<int> skills;
+	TYPE_BUFF_LIST buffs;
 
 	int idx; //方便查询
 
@@ -124,7 +177,7 @@ public:
 	}
 
 	//最前排的之一
-	CBattleUnitLogic* randomFront();
+	int randomTarget(int targetType, vector<CBattleUnitLogic*>& output);
 
 	//下个可以行动的单位
 	CBattleUnitLogic* nextActUnit();
@@ -132,7 +185,9 @@ public:
 	//清除所有单位的行动标志
 	void clearAct();
 
-protected:
+	bool hasUnacted();
+
+public:
 	CBattleUnitLogic** m_units;
 	int m_unitsLen;
 };

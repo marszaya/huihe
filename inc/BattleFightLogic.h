@@ -7,6 +7,8 @@
 #include "BattleResult.h"
 #include "BattleFightMsg.h"
 #include "BattleFightTeam.h"
+#include "BattleLogicDef.h"
+#include "BattleLogicEffect.h"
 #include <vector>
 using namespace std;
 
@@ -54,6 +56,7 @@ public:
 		}
 	};
 
+	
 public:
 	CBattleFightLogic(void);
 	~CBattleFightLogic(void);
@@ -61,8 +64,6 @@ public:
 
 	void initBattle();
 
-
-	
 	//开始战斗
 	//单步执行Game过程
 	//返回值: 0=成功，-1=失败
@@ -95,30 +96,6 @@ public:
 		return m_msg;
 	}
 
-protected:
-	//技能攻击
-	//isBeforeAttack = true 表示选择攻击前触发的技能，否则攻击后 
-	//ret = -1 失败 ret=0成功
-	int doSkillAttack(CBattleUnitLogic* src, CBattleUnitLogic* dst, bool isBeforeAttack);
-	//普通攻击
-	//ret = -1 失败 ret=0成功
-	int doAttack(CBattleUnitLogic* src, CBattleUnitLogic* dst);
-
-	//执行 战斗开始前 步骤
-	int onGameStart();
-
-	//执行 战斗结束后 步骤
-	int onGameEnd();
-
-	//执行 回合开始前 步骤
-	int onRoundStart();
-
-	//执行 回合结束后 步骤
-	int onRoundEnd();
-
-	//执行一次攻击
-	int doAttackStep();
-
 	inline CBattleTeamLogic* getActiveTeam()
 	{
 		if(m_context.m_homeTeamTurn)
@@ -134,6 +111,30 @@ protected:
 		else
 			return &m_home;
 	}
+
+	//辅助函数
+	//从Unit中构造effect，加入到manager中
+	bool createEffectFromUnit(CBattleUnitLogic* ptarget, EFFECT_CONDITION_TYPE condition,
+		CBattleLogicEffectManager& manager);
+
+protected:
+	//执行 战斗开始前 步骤
+	int onGameStart();
+
+	//执行 战斗结束后 步骤
+	int onGameEnd();
+
+	//执行 回合开始前 步骤
+	int onRoundStart();
+
+	//执行 回合结束后 步骤
+	int onRoundEnd();
+
+	//尝试 一次单位激活
+	int tryUnitActive();
+
+	//一个单位激活
+	int onUnitActive(CBattleUnitLogic* src);
 
 	inline bool isTeamActed()
 	{
@@ -185,7 +186,7 @@ protected:
 			return true;
 		}
 		
-		if(m_home.checkFail())
+		if(m_away.checkFail())
 		{
 			m_win = true;
 			m_context.state = BATTLE_STATE_END;
@@ -211,7 +212,8 @@ protected:
 			if(m_context.state == BATTLE_STATE_UNIT 
 				&& !m_context.m_homeActed && m_context.m_homeTeamTurn)
 			{
-				m_context.m_waitFlag = true;
+				if(m_home.hasUnacted())
+					m_context.m_waitFlag = true;
 			}
 		}
 		else
@@ -223,16 +225,7 @@ protected:
 		return m_context.m_waitFlag;
 	}
 
-	inline BattleAction* newAtkMsgAction(BattleAction::BattleActionType t, int s, int d, int id=-1)
-	{
-		BattleAction* pba = m_msg.addNewAction();
-		pba->set_type(t);
-		if(id>0)
-			pba->set_id(id);
-		pba->set_srcunitidx(CBattleFightMsg::makeMsgUnitIdx(s, m_context.m_homeTeamTurn));
-		pba->add_dstunitidxes(CBattleFightMsg::makeMsgUnitIdx(d, !m_context.m_homeTeamTurn));
-		return pba;
-	}
+	void checkBuffEnd(CBattleUnitLogic* activedUnit);
 
 protected:
 	CBattleTeamLogic m_home; //主队

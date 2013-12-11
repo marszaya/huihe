@@ -107,3 +107,32 @@ int CDataUtil::getMajorType(int itemid)
 
 	return -1;
 }
+
+int CDataUtil::getFightUnitMaxByLevel(int userlevel)
+{
+	if(userlevel < 10)
+	{
+		return 2;
+	}
+	else if(userlevel < 20)
+	{
+		return 3;
+	}
+	else if(userlevel < 30)
+	{
+		return 4;
+	}
+	else if(userlevel < 40)
+	{
+		return 5;
+	}
+	else
+	{
+		return 6;
+	}
+}
+
+int CDataUtil::getOwnUnitMaxByLevel(int userlevel)
+{
+	return 30;
+}

@@ -18,10 +18,12 @@ message BattleAction
 {
 	enum BattleActionType
 	{
-		ACTION_DMG=1;
-		ACTION_HEAL=2;
-		ACTION_BUFF=3;
-		ACTION_SKILL=4;
+		ACTION_DMG=1; //伤害
+		ACTION_CAST=2; //施法
+		ACTION_BUFF_BEGIN=3; //buff开始
+		ACTION_BUFF_END=4; //buff结束
+		ACTION_BECAST=5; //被施法
+		ACTION_DIE=99; //死亡
 	}
 	
 	optional BattleActionType type = 1;

@@ -19,3 +19,9 @@
 *.tlog
 *.log
 *.dll
+*.idb
+*.lastbuildstate
+*.pdb
+*.ilk
+*.exe
+*.manifest

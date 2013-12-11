@@ -45,7 +45,7 @@ bool CBattleSkillName::initCBattleSkillName(int skillId)
 		m_skillId = skillId;
 
 		CCLabelTTF* label = CCLabelTTF::create(m_skillName.c_str(), 
-			CStdViewFactory::LABEL_FONT.name.c_str(), 16);
+			CStdViewFactory::LABEL_FONT.name.c_str(), 14);
 		if(!label)
 			break;
 
@@ -64,13 +64,12 @@ bool CBattleSkillName::addToWindow(CCWindowBase* parentWin, float dt)
 {
 	bool ret = false;
 	do{
-		float dt1 = dt*0.3;
-		float dt2 = dt*0.4;
-		float dt3 = dt*0.3;
+		float dt1 = dt*0.4;
+		float dt2 = dt*0.6;
 
 		CCSpawn* phase1 = CCSpawn::createWithTwoActions(
 			CCFadeIn::create(dt1),
-			CCMoveBy::create(dt1, ccp(0, 30))
+			CCMoveBy::create(dt1, ccp(0, 15))
 		);
 		if(!phase1)
 			break;
@@ -79,14 +78,7 @@ bool CBattleSkillName::addToWindow(CCWindowBase* parentWin, float dt)
 		if(!phase2)
 			break;
 
-		CCSpawn* phase3 = CCSpawn::createWithTwoActions(
-			CCFadeOut::create(dt3),
-			CCMoveBy::create(dt3, ccp(0, 30))
-		);
-		if(!phase3)
-			break;
-
-		CCFiniteTimeAction* allAction = CCSequence::create(phase1,phase2, phase3,NULL);
+		CCFiniteTimeAction* allAction = CCSequence::create(phase1,phase2,NULL);
 		if(!allAction)
 			break;
 

@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>D:\工作区\win8 dev\protobufoutput\inc;..\libccmyext\inc;..\inc;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\protobufoutput\inc;..\libccmyext\inc;..\inc;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>
@@ -61,7 +61,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libprotobuf.lib;libprotobuf-lite.lib;libccmyext.lib;opengl32.lib;glew32.lib;libcocos2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\工作区\win8 dev\protobufoutput\lib\$(Configuration)\;$(SolutionDir)$(Configuration).win32\;..\libccmyext\project-ccmyext\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\protobufoutput\lib\$(Configuration)\;$(SolutionDir)$(Configuration).win32\;..\libccmyext\project-ccmyext\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,27 +98,36 @@
     <ClInclude Include="..\inc\AutoShopTab.h" />
     <ClInclude Include="..\inc\AutoSkillTab.h" />
     <ClInclude Include="..\inc\AutoStrTab.h" />
+    <ClInclude Include="..\inc\AutoUnitBuyTab.h" />
+    <ClInclude Include="..\inc\AutoUnitRandomTab.h" />
     <ClInclude Include="..\inc\AutoUnitShowTab.h" />
+    <ClInclude Include="..\inc\AutoUnitTab.h" />
     <ClInclude Include="..\inc\BagWindow.h" />
     <ClInclude Include="..\inc\BagWindowBase.h" />
     <ClInclude Include="..\inc\BagWindowEquip.h" />
+    <ClInclude Include="..\inc\BattleBuffLogic.h" />
     <ClInclude Include="..\inc\BattleFightLogic.h" />
     <ClInclude Include="..\inc\BattleFightMsg.h" />
     <ClInclude Include="..\inc\BattleFightTeam.h" />
     <ClInclude Include="..\inc\BattleFightUnit.h" />
     <ClInclude Include="..\inc\BattleFormatConf.h" />
+    <ClInclude Include="..\inc\BattleLogicDef.h" />
+    <ClInclude Include="..\inc\BattleLogicEffect.h" />
     <ClInclude Include="..\inc\BattleMap.h" />
     <ClInclude Include="..\inc\BattleMapScene.h" />
     <ClInclude Include="..\inc\battlemsg.pb.h" />
     <ClInclude Include="..\inc\BattleProcedureAttack.h" />
     <ClInclude Include="..\inc\BattleProcedureAttackRaged.h" />
+    <ClInclude Include="..\inc\BattleProcedureBeCast.h" />
     <ClInclude Include="..\inc\BattleResult.h" />
     <ClInclude Include="..\inc\BattleScene.h" />
+    <ClInclude Include="..\inc\BattleSkillLogic.h" />
     <ClInclude Include="..\inc\BattleSkillName.h" />
     <ClInclude Include="..\inc\BattleWindow.h" />
     <ClInclude Include="..\inc\common.pb.h" />
     <ClInclude Include="..\inc\config.pb.h" />
     <ClInclude Include="..\inc\DataUtil.h" />
+    <ClInclude Include="..\inc\DEFINED_VALUES.h" />
     <ClInclude Include="..\inc\FightEffect.h" />
     <ClInclude Include="..\inc\FightUnit.h" />
     <ClInclude Include="..\inc\item.pb.h" />
@@ -161,18 +170,22 @@
     <ClCompile Include="..\src\BagWindow.cpp" />
     <ClCompile Include="..\src\BagWindowBase.cpp" />
     <ClCompile Include="..\src\BagWindowEquip.cpp" />
+    <ClCompile Include="..\src\BattleBuffLogic.cpp" />
     <ClCompile Include="..\src\BattleFightLogic.cpp" />
     <ClCompile Include="..\src\BattleFightMsg.cpp" />
     <ClCompile Include="..\src\BattleFightTeam.cpp" />
     <ClCompile Include="..\src\BattleFightUnit.cpp" />
     <ClCompile Include="..\src\BattleFormatConf.cpp" />
+    <ClCompile Include="..\src\BattleLogicEffect.cpp" />
     <ClCompile Include="..\src\BattleMap.cpp" />
     <ClCompile Include="..\src\BattleMapScene.cpp" />
     <ClCompile Include="..\src\battlemsg.pb.cc" />
     <ClCompile Include="..\src\BattleProcedureAttack.cpp" />
     <ClCompile Include="..\src\BattleProcedureAttackReaged.cpp" />
+    <ClCompile Include="..\src\BattleProcedureBeCast.cpp" />
     <ClCompile Include="..\src\BattleResult.cpp" />
     <ClCompile Include="..\src\BattleScene.cpp" />
+    <ClCompile Include="..\src\BattleSkillLogic.cpp" />
     <ClCompile Include="..\src\BattleSkillName.cpp" />
     <ClCompile Include="..\src\BattleWindow.cpp" />
     <ClCompile Include="..\src\common.pb.cc" />

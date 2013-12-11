@@ -60,6 +60,9 @@ protected:
 	void doAttack(int srcTagId, int dstTagId, int dmg, int skillId=-1);
 	void showBullets(const char* bulletConf, 
 		 const CCPoint& srcPos,const CCPoint& dstPos,float* dtOut=NULL);
+
+	void showDmg(int tagId, int dmg, int skillid=-1);
+
 	//add new unit to map
 	//return unit tagId;
 	int addFightUnit(int unitId, int x, int y, bool flip, CBattleUnitLogic* pdata);

@@ -32,6 +32,7 @@ BattleRound* CBattleFightMsg::readRound()
 		return NULL;
 	}
 
+	m_actionIdxInRound = 0;
 	return detail->mutable_rounds(m_roundIdxInDetail++);
 }
 

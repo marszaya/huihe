@@ -166,6 +166,9 @@ bool CBattleScene::fillPreloader()
 		if(!fillPreloadBattle(m_savebackgroundId))
 			break;
 
+		//ËùÓÐbuffÍ¼±ê
+		m_preloader->addPreLoadFrames("icons/buff.png");
+
 		ret = true;
 	}while(0);
 	return ret;

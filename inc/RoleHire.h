@@ -9,8 +9,8 @@
 class CRoleHire:public CCEItemContainer
 {
 public:
-	const static int TABLE_ROW = 3;
-	const static int TABLE_COL =2;
+	const static int TABLE_ROW = 1;
+	const static int TABLE_COL = 2;
 public:
 	CRoleHire(void);
 	virtual ~CRoleHire(void);
@@ -23,6 +23,11 @@ public:
 	void onClose(CCObject* target);
 	void onHire(CCObject* target);
 	void onRefreshHire(CCObject* target);
+
+	void onDialogueClose(CCObject* param);
 protected:
 	virtual void onFrameMsg(CCObject* msg);
+
+protected:
+	CCWindowBase* m_dialog;
 };

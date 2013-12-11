@@ -227,6 +227,8 @@ bool BattleAction_BattleActionType_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
+    case 99:
       return true;
     default:
       return false;
@@ -235,9 +237,11 @@ bool BattleAction_BattleActionType_IsValid(int value) {
 
 #ifndef _MSC_VER
 const BattleAction_BattleActionType BattleAction::ACTION_DMG;
-const BattleAction_BattleActionType BattleAction::ACTION_HEAL;
-const BattleAction_BattleActionType BattleAction::ACTION_BUFF;
-const BattleAction_BattleActionType BattleAction::ACTION_SKILL;
+const BattleAction_BattleActionType BattleAction::ACTION_CAST;
+const BattleAction_BattleActionType BattleAction::ACTION_BUFF_BEGIN;
+const BattleAction_BattleActionType BattleAction::ACTION_BUFF_END;
+const BattleAction_BattleActionType BattleAction::ACTION_BECAST;
+const BattleAction_BattleActionType BattleAction::ACTION_DIE;
 const BattleAction_BattleActionType BattleAction::BattleActionType_MIN;
 const BattleAction_BattleActionType BattleAction::BattleActionType_MAX;
 const int BattleAction::BattleActionType_ARRAYSIZE;

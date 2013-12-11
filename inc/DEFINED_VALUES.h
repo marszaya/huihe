@@ -1,0 +1,8 @@
+#ifndef __DEFINED_VALUES_H__
+#define __DEFINED_VALUES_H__
+
+//战将刷新相关配置
+#define DEFINED_VALUE_HIRE_REFRESH_COST 10000
+#define DEFINED_VALUE_HIRE_RANDOM_SET "1"
+
+#endif

@@ -12,6 +12,7 @@ CRoleBattleList::CRoleBattleList(void)
 	m_roleFormat = NULL;
 	m_roleDetail = NULL;
 	m_dialog = NULL;
+	this->addPostMsg(CMyControl::CMD_DATA_UNIT_FIGHT_MAX);
 }
 
 CRoleBattleList::~CRoleBattleList(void)
@@ -35,6 +36,7 @@ bool CRoleBattleList::initCRoleBattleList()
 {
 	bool ret=false;
 	do{
+		m_dialog = NULL;
 		m_roleSel = NULL;
 		m_curRoleIdx = 0;
 		m_roleFormat = NULL;
@@ -79,6 +81,21 @@ void CRoleBattleList::onFrameMsg(CCObject* msg)
 		{
 			CMyControl::getSharedControl()->invokeCmd(CMyControl::CMD_MAINSCENE_POPUPCLOSE, this);
 		}
+		else if(cmd == CMyControl::CMD_DATA_UNIT_FIGHT_MAX)
+		{
+			if(m_dialog != NULL)
+			{
+				this->removeChild(m_dialog);
+				m_dialog = NULL;
+			}
+
+			m_dialog = CStdViewFactory::createDialog("reach fight max", 
+				CCUCommonDelegate::create(this, 
+					callfuncO_selector(CRoleBattleList::onDialogueClose)
+				),
+				CStdViewFactory::DIALOG_TYPE_ALERT
+			);		
+		}
 	}while(0);
 }
 
@@ -91,6 +108,11 @@ void CRoleBattleList::onClose(CCObject* target)
 		}
 
 		//提示有未保存的阵形
+		if(m_dialog != NULL)
+		{
+			this->removeChild(m_dialog);
+			m_dialog = NULL;
+		}
 		m_dialog = CStdViewFactory::createDialog("has unsaved change, close window now ?", 
 			CCUCommonDelegate::create(this, 
 				callfuncO_selector(CRoleBattleList::onDialogueClose)
@@ -217,6 +239,12 @@ void CRoleBattleList::onSave(CCObject* param)
 			{
 				//成功提示
 				hintMsg = "save ok";
+			}
+
+			if(m_dialog != NULL)
+			{
+				this->removeChild(m_dialog);
+				m_dialog = NULL;
 			}
 
 			m_dialog = CStdViewFactory::createDialog(hintMsg, 

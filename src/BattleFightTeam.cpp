@@ -46,7 +46,7 @@ CBattleUnitLogic* CBattleTeamLogic::setUnitByRole(unsigned int idx, Role* p, Bat
 {
 	CBattleUnitLogic* ret =NULL;
 	do{
-		if(idx >= m_unitsLen)
+		if(idx >= (unsigned int)m_unitsLen)
 			break;
 
 		//不允许重复设置
@@ -90,7 +90,7 @@ CBattleUnitLogic* CBattleTeamLogic::setUnitByConf(unsigned int idx,const char* n
 {
 	CBattleUnitLogic* ret = NULL;
 	do{
-		if(idx >= m_unitsLen)
+		if(idx >= (unsigned int)m_unitsLen)
 			break;
 
 		//不允许重复设置
@@ -109,6 +109,8 @@ CBattleUnitLogic* CBattleTeamLogic::setUnitByConf(unsigned int idx,const char* n
 		if(!pnpcRow)
 			break;
 
+		int npcattrPercent = atoi(confNpcTable->getRowValue(pnpcRow, confNpcTable->ATTRPERCENT));
+
 		const TconfRow* pnpcAttrRow = confNpcAttrTable->getRowByKey(
 			confNpcTable->getRowValue(pnpcRow, confNpcTable->ATTRID));
 		if(!pnpcAttrRow)
@@ -119,9 +121,9 @@ CBattleUnitLogic* CBattleTeamLogic::setUnitByConf(unsigned int idx,const char* n
 			break;
 
 		punit->	setParam(
-			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->HP)),
-			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->ATK)),
-			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->DEF)),
+			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->HP))*npcattrPercent/100,
+			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->ATK))*npcattrPercent/100,
+			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->DEF))*npcattrPercent/100,
 			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->SPD)),
 			atoi(confNpcAttrTable->getRowValue(pnpcAttrRow, confNpcAttrTable->ENERGY)),
 			atoi(confNpcTable->getRowValue(pnpcRow, confNpcTable->SHOWTYPE))
@@ -228,35 +230,62 @@ void CBattleTeamLogic::updateCd(int cd)
 }
 */
 
-
-CBattleUnitLogic* CBattleTeamLogic::randomFront()
+int CBattleTeamLogic::randomTarget(int targetType, vector<CBattleUnitLogic*>& output)
 {
-	CBattleUnitLogic* ret = NULL;
+	int ret = -1;
 	do{
 		CBattleUnitLogic* cur = NULL;
 		vector<CBattleUnitLogic*> curSet;
-		curSet.reserve(CBattleFormatConf::getSharedInstance()->getYMax());
+		int yMax = CBattleFormatConf::getSharedInstance()->getYMax();
 		int xMax = CBattleFormatConf::getSharedInstance()->getXMax();
+		curSet.reserve(xMax*yMax);
+
 		for(int i=xMax-1; i>=0; --i)
 		{
-			curSet.clear();
 			vector<int> idxes;
 			CBattleFormatConf::getSharedInstance()->getIdxesByX(i, idxes);
 			for(unsigned int j=0; j<idxes.size(); ++j)
 			{
-				cur = m_units[idxes[j]];
-				if(cur && cur->isAlive())
+				if(idxes[j] < this->m_unitsLen && idxes[j]>=0)
 				{
-					curSet.push_back(cur);
+					cur = m_units[idxes[j]];
+					if(cur && cur->isAlive())
+					{
+						curSet.push_back(cur);
+					}
 				}
 			}
 
-			if(curSet.size() > 0)
+			//单体攻击
+			if(targetType == 1)
 			{
-				ret = curSet[gGameTools.rand(0,curSet.size()-1)];
-				break;
+				//最前排候选即可
+				if(curSet.size() > 0)
+					break;
 			}
 		}
+
+		if(curSet.size() > 0)
+		{
+			unsigned int max;
+			if(targetType == 0)
+			{
+				max = curSet.size();
+			}
+			else
+			{
+				max = targetType;
+			}
+
+			vector<int> outputIdxes;
+			gGameTools.randSelect(curSet.size(), outputIdxes, max);
+			for(unsigned int oi=0; oi<outputIdxes.size(); ++oi)
+			{
+				output.push_back(curSet[outputIdxes[oi]]);
+			}
+		}
+
+		ret = 0;
 	}while(0);
 	return ret;
 }
@@ -265,16 +294,25 @@ CBattleUnitLogic* CBattleTeamLogic::randomFront()
 CBattleUnitLogic* CBattleTeamLogic::nextActUnit()
 {
 	CBattleUnitLogic* ret = NULL;
-	for(int i=0; i<this->m_unitsLen; ++i)
+	int xMax = CBattleFormatConf::getSharedInstance()->getXMax();
+	for(int i=xMax-1; i>=0; --i)
 	{
-		if(this->m_units[i]->isAlive() && !this->m_units[i]->isActed())
+		bool ff=false;
+		for(int j=0; j<CBattleFormatConf::getSharedInstance()->getYMax(); ++j)
 		{
-			this->m_units[i]->setActed(true);
-			ret = this->m_units[i];
-			break;
+			int idx = CBattleFormatConf::getSharedInstance()->getIdxByXY(i, j);
+			if(this->m_units[idx]!=NULL && this->m_units[idx]->isAlive() && !this->m_units[idx]->isActed())
+			{
+				this->m_units[idx]->setActed(true);
+				ret = this->m_units[idx];
+				ff = true;
+				break;
+			}
 		}
-	}
 
+		if(ff)
+			break;
+	}
 	return ret;
 }
 
@@ -286,4 +324,17 @@ void CBattleTeamLogic::clearAct()
 			this->m_units[i]->setActed(false);
 	}
 }
+
+bool CBattleTeamLogic::hasUnacted()
+{
+	for(int i=0; i<this->m_unitsLen; ++i)
+	{
+		if(this->m_units[i]!=NULL && this->m_units[i]->isAlive() && !this->m_units[i]->isActed())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 

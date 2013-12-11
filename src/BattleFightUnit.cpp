@@ -5,8 +5,10 @@
 #include "FightEffect.h"
 #include "BattleSkillName.h"
 
+
 CBattleFightUnit::CBattleFightUnit(void)
 {
+	m_pslide = NULL;
 	m_fightUnit = NULL;
 	m_x = 0;
 	m_y = 0;
@@ -14,7 +16,9 @@ CBattleFightUnit::CBattleFightUnit(void)
 	m_actionParam = NULL;
 	m_dmgTag = -1;
 	m_hpbar = NULL;
+	m_energyBar = NULL;
 	m_hpbarLableTag = -1;
+	m_energyLableTag = -1;
 	m_pdata = NULL;
 	m_spd = 1;
 }
@@ -50,6 +54,7 @@ bool CBattleFightUnit::initCBattleFightUnit(int unitid)
 
 		this->addChild(m_fightUnit);
 		
+		//血条初始化
 		m_hpbar = CBarBase::create("mainScene/greenBar.png");
 		CC_BREAK_IF(!m_hpbar);
 		m_hpbar->setAnchorPoint(ccp(0.5,0.5));
@@ -57,6 +62,23 @@ bool CBattleFightUnit::initCBattleFightUnit(int unitid)
 		CCMyHelper::setPosC(m_hpbar, 0, 60);
 		this->addChild(m_hpbar);
 		m_hpbar->setPercent(100);
+
+		//能量条初始化
+		m_energyBar = CBarBase::create("mainScene/yellowBar.png");
+		CC_BREAK_IF(!m_energyBar);
+		m_energyBar->setAnchorPoint(ccp(0.5,0.5));
+		m_energyBar->setScaleX(0.5);
+		CCMyHelper::setPosC(m_energyBar, 0, 80);
+		this->addChild(m_energyBar);
+		m_energyBar->setPercent(0);
+
+		//形象
+		m_pslide = CCESlideWindow::create();
+		CC_BREAK_IF(!m_pslide);
+		CCMyHelper::setPosC(m_pslide, 0, 50);
+		this->addChild(m_pslide);
+		m_pslide->startPlay();
+
 		m_spd = 1;
 		ret = true;
 	}while(0);
@@ -80,6 +102,20 @@ void CBattleFightUnit::updateHp()
 		);
 }
 
+void CBattleFightUnit::updateEnergy()
+{
+	if(!m_energyBar)
+		return;
+
+	int now = m_pdata->energy;
+	int max = 1000;
+	m_energyBar->setPercent(float(now)/max*100);
+	m_energyLableTag = this->updateLabel(m_energyLableTag,
+		CStrTool::strDecimal(now).append("/").append(CStrTool::strDecimal(max)).c_str(),
+			CStdViewFactory::LABEL_FONT, 
+			CCMyHelper::POS_INFO(0, 80, CCMyHelper::POSITION_TYPE_CENTER)
+		);
+}
 
 void CBattleFightUnit::actionMoveToPos(CCPoint pos)
 {
@@ -95,18 +131,14 @@ void CBattleFightUnit::actionDoAttack(int skillId)
 
 	if(skillId >= 0)
 	{
-		CBattleSkillName* skillName = CBattleSkillName::create(skillId);
-		if(skillName)
-		{
-			CCMyHelper::setPosC(skillName, 0, 60);
-			skillName->addToWindow(this, dt);
-		}
+		addSkillName(skillId, dt);
 	}
 
 	this->callAction(CCDelayTime::create(dt));
+	updateEnergy();
 }
 
-void CBattleFightUnit::actionShowDmg(int dmg)
+void CBattleFightUnit::actionShowDmg(int dmg, int skillid)
 {
 	if(m_dmgTag!=-1)
 		return;
@@ -121,6 +153,9 @@ void CBattleFightUnit::actionShowDmg(int dmg)
 	this->callAction(CCDelayTime::create(maxDt));
 
 	updateHp();
+
+	if(skillid>=0)
+		addSkillName(skillid, maxDt);
 }
 
 void CBattleFightUnit::actionDelay(float dt)
@@ -128,12 +163,12 @@ void CBattleFightUnit::actionDelay(float dt)
 	this->callAction(CCDelayTime::create(dt));
 }
 
-
-bool CBattleFightUnit::isDead()
+void CBattleFightUnit::actionEffect(int effectid)
 {
-	return !m_pdata->isAlive();
+	float effectDt = 0;
+	addEffect(effectid, effectDt);
+	this->callAction(CCDelayTime::create(effectDt));
 }
-
 
 void CBattleFightUnit::callbackHideDmgLabel()
 {
@@ -189,6 +224,16 @@ void CBattleFightUnit::addEffect(int effectid, float& durationOut)
 	}
 }
 
+void CBattleFightUnit::addSkillName(int skillid, float duration)
+{
+	CBattleSkillName* skillName = CBattleSkillName::create(skillid);
+	if(skillName)
+	{
+		CCMyHelper::setPosC(skillName, 0, 60);
+		skillName->addToWindow(this, duration);
+	}
+}
+
 void CBattleFightUnit::callbackRemoveEffect(CCObject* p)
 {
 	CCString* pstr = dynamic_cast<CCString*>(p);
@@ -196,4 +241,26 @@ void CBattleFightUnit::callbackRemoveEffect(CCObject* p)
 	{
 		this->removeChildByTag(pstr->intValue(), true);
 	}
+}
+
+
+void CBattleFightUnit::addBuffIcon(int iconid, int fromIdx)
+{
+	if(m_pslide == NULL)
+		return;
+	
+	CCSprite* psprite = CCMyHelper::createZeroAnchorFrameSprite(createBuffFrameName(iconid).c_str());
+	psprite->setScale(0.4);
+	char tmp[64]={0};
+	sprintf(tmp, "%d_%d", iconid, fromIdx);
+	m_pslide->addSlide(psprite, tmp);
+}
+
+void CBattleFightUnit::delBuffIcon(int iconid, int fromIdx)
+{
+	if(m_pslide == NULL)
+		return;
+	char tmp[64]={0};
+	sprintf(tmp, "%d_%d", iconid, fromIdx);
+	m_pslide->delSlide(tmp);
 }

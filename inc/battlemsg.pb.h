@@ -56,13 +56,15 @@ const int BattleUnitIdxDef_IdxDef_IdxDef_ARRAYSIZE = BattleUnitIdxDef_IdxDef_Idx
 
 enum BattleAction_BattleActionType {
   BattleAction_BattleActionType_ACTION_DMG = 1,
-  BattleAction_BattleActionType_ACTION_HEAL = 2,
-  BattleAction_BattleActionType_ACTION_BUFF = 3,
-  BattleAction_BattleActionType_ACTION_SKILL = 4
+  BattleAction_BattleActionType_ACTION_CAST = 2,
+  BattleAction_BattleActionType_ACTION_BUFF_BEGIN = 3,
+  BattleAction_BattleActionType_ACTION_BUFF_END = 4,
+  BattleAction_BattleActionType_ACTION_BECAST = 5,
+  BattleAction_BattleActionType_ACTION_DIE = 99
 };
 bool BattleAction_BattleActionType_IsValid(int value);
 const BattleAction_BattleActionType BattleAction_BattleActionType_BattleActionType_MIN = BattleAction_BattleActionType_ACTION_DMG;
-const BattleAction_BattleActionType BattleAction_BattleActionType_BattleActionType_MAX = BattleAction_BattleActionType_ACTION_SKILL;
+const BattleAction_BattleActionType BattleAction_BattleActionType_BattleActionType_MAX = BattleAction_BattleActionType_ACTION_DIE;
 const int BattleAction_BattleActionType_BattleActionType_ARRAYSIZE = BattleAction_BattleActionType_BattleActionType_MAX + 1;
 
 // ===================================================================
@@ -209,9 +211,11 @@ class BattleAction : public ::google::protobuf::MessageLite {
 
   typedef BattleAction_BattleActionType BattleActionType;
   static const BattleActionType ACTION_DMG = BattleAction_BattleActionType_ACTION_DMG;
-  static const BattleActionType ACTION_HEAL = BattleAction_BattleActionType_ACTION_HEAL;
-  static const BattleActionType ACTION_BUFF = BattleAction_BattleActionType_ACTION_BUFF;
-  static const BattleActionType ACTION_SKILL = BattleAction_BattleActionType_ACTION_SKILL;
+  static const BattleActionType ACTION_CAST = BattleAction_BattleActionType_ACTION_CAST;
+  static const BattleActionType ACTION_BUFF_BEGIN = BattleAction_BattleActionType_ACTION_BUFF_BEGIN;
+  static const BattleActionType ACTION_BUFF_END = BattleAction_BattleActionType_ACTION_BUFF_END;
+  static const BattleActionType ACTION_BECAST = BattleAction_BattleActionType_ACTION_BECAST;
+  static const BattleActionType ACTION_DIE = BattleAction_BattleActionType_ACTION_DIE;
   static inline bool BattleActionType_IsValid(int value) {
     return BattleAction_BattleActionType_IsValid(value);
   }

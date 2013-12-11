@@ -9,6 +9,7 @@
 #include "StrTool.h"
 #include "tconfManager.h"
 #include "mathTools.h"
+#include "DEFINED_VALUES.h"
 using namespace std;
 
 CMyData* CMyData::m_pdata=NULL;
@@ -70,19 +71,15 @@ void CMyData::initData()
 	pid->set_id(this->m_userName);
 	pid->set_name(this->m_userName);
 	
-	proleset->set_battlelistmax(3);
+	proleset->set_battlelistmax(6);
 	proleset->set_maxid(0);
-	for(i=0; i<proleset->battlelistmax(); ++i)
-	{
-		Role* prole = createNewRole(proleset, i+1);
-		proleset->add_battlelist()->CopyFrom(prole->id());
-		
-		if(i==0)
-		{
-			prole->set_ismain(1);
-			proleset->set_mainroleidx(0);
-		}
-	}
+	
+	//创建主将
+	Role* prole = createNewRole(proleset, 1);
+	prole->set_ismain(1);
+	proleset->set_mainroleidx(0);
+	//加入作战队列
+	proleset->add_battlelist()->CopyFrom(prole->id());
 
 	this->addItem(1001, 1);
 	this->addItem(2001, 1);
@@ -91,7 +88,7 @@ void CMyData::initData()
 	guarder.clear();
 }
 
-Role* CMyData::createNewRole(RoleSet* rs, int showType, int whichArray)
+Role* CMyData::createNewRole(RoleSet* rs, int unitid, int whichArray)
 {
 	Role* ret = NULL;
 	do{
@@ -100,25 +97,47 @@ Role* CMyData::createNewRole(RoleSet* rs, int showType, int whichArray)
 		if(whichArray==0)
 			prole = rs->add_roles();
 		else
+		{
 			prole = rs->add_shoproles();
+			prole->set_hireflag(unitid);
+		}
 
+		CAutoUnitTab* unitconf = TCONF_GET(CAutoUnitTab);
+		if(unitconf == NULL)
+			break;
+
+		const TconfRow* pconfrow= unitconf->getRowByKey(CStrTool::strDecimal(unitid).c_str());
+		if(pconfrow == NULL)
+		{
+			CCLog("CAutoUnitTab no id=%d", unitid);
+			break;
+		}
+	
 		prole->mutable_id()->set_id(CStrTool::strDecimal(maxid+1));
-		prole->mutable_id()->set_name(string("merc").append(prole->mutable_id()->id()));
-		prole->set_showtype(showType);
+		prole->mutable_id()->set_name(string(unitconf->getRowValue(pconfrow, unitconf->NAME)).append(prole->mutable_id()->id()));
+		prole->set_showtype(atoi(unitconf->getRowValue(pconfrow, unitconf->SHOWTYPE)));
 		prole->mutable_expr()->set_expr(0);
 		prole->mutable_expr()->set_level(1);
 
 		BattleAttr* pbr = prole->mutable_battr();
-		pbr->set_hp(1000);
-		pbr->set_ad(300);
+		pbr->set_hp(atoi(unitconf->getRowValue(pconfrow, unitconf->BASEHP)));
+		pbr->set_ad(atoi(unitconf->getRowValue(pconfrow, unitconf->BASEATK)));
 		pbr->set_ap(0);
-		pbr->set_arm(20);
+		pbr->set_arm(atoi(unitconf->getRowValue(pconfrow, unitconf->BASEDEF)));
 		pbr->set_mr(0);
-		pbr->set_as(110);
-		pbr->set_energy(100);
+		pbr->set_as(100);
+		pbr->set_energy(atoi(unitconf->getRowValue(pconfrow, unitconf->BASEENERGY)));
 
 		BattleSkill* pbs = prole->mutable_skill();
-		pbs->add_ids(1);
+		vector<string> vout;
+		CStrTool::split(unitconf->getRowValue(pconfrow, unitconf->SKILLS), ",", vout);
+		for(unsigned int i=0; i<vout.size(); ++i)
+		{
+			int skillid = atoi(vout[i].c_str());
+			if(skillid > 0)
+				pbs->add_ids(skillid);
+		}
+		
 
 		rs->set_maxid(maxid+1);
 		ret = prole;
@@ -960,25 +979,77 @@ bool CMyData::refreshRoleHire(int num, bool free, bool noEvent)
 
 		if(!free)
 		{
-			if(!this->modifyGold(-10000))
+			if(!this->modifyGold(0-DEFINED_VALUE_HIRE_REFRESH_COST))
+			{
+				throwEvent(CMyControl::CMD_DATA_ROLE_HIRED_NO_MONEY);
+				postEventsToControl();
 				break;
+			}
 		}
 
 		RoleSet* proleset = m_user.mutable_role();
 		proleset->clear_shoproles();
-		for(int i=0; i<num; ++i)
+
+		//从战将随机表中读取 set=DEFINED_VALUE_HIRE_RANDOM_SET
+		CAutoUnitRandomTab* pconfur = TCONF_GET(CAutoUnitRandomTab);
+		if(pconfur == NULL)
+			break;
+
+		const TconfTable& tur = pconfur->getTable();
+		vector<const TconfRow*> rowset;
+		for(int ti=0; ti<tur.rows_size(); ++ti)
 		{
-			int showType = gGameTools.rand(1,4);
-			Role* prole = this->createNewRole(proleset, showType,1);
-			int hp = gGameTools.randAround(1000, 50);
-			int def = gGameTools.randAround(1000, 50);
-			int atk = gGameTools.randAround(1000, 50);
-			if(!modifyRoleAttr(prole, Item::EFFECT_HP, hp))
+			const TconfRow& tr = tur.rows(ti);
+			if(strcmp(pconfur->getRowValue(&tr, pconfur->RANDOMSET),DEFINED_VALUE_HIRE_RANDOM_SET)==0)
+			{
+				rowset.push_back(&tr);
+			}
+		}
+
+		if(rowset.size() == 0)
+		{
+			CCLog("CAutoUnitRandomTab no randomset=%s", DEFINED_VALUE_HIRE_RANDOM_SET);
+			break;
+		}
+		//随机抽取num个将，不可重复
+		const TconfRow* pselect = NULL;
+		for(int i=0; i<num && rowset.size()>=0; ++i)
+		{
+			//概率总数
+			int weighttotal = 0;
+			unsigned int ri=0;
+			for(ri=0; ri<rowset.size();++ri)
+			{
+				weighttotal += atoi(pconfur->getRowValue(rowset[ri],pconfur->WEIGHT));
+			}
+
+			if(weighttotal <= 0)
 				break;
-			if(!modifyRoleAttr(prole, Item::EFFECT_ARMOR, def))
-				break;
-			if(!modifyRoleAttr(prole, Item::EFFECT_AD, atk))
-				break;
+
+			//抽取
+			int randweight = gGameTools.rand(0,weighttotal-1);
+			for(ri=0; ri<rowset.size();++ri)
+			{
+				int thisweight = atoi(pconfur->getRowValue(rowset[ri],pconfur->WEIGHT));
+				if(randweight < thisweight)
+				{
+					pselect = rowset[ri];
+					//从池子里除去
+					if(ri != rowset.size()-1)
+						rowset[ri] = rowset[rowset.size()-1];
+					rowset.pop_back();
+					break;
+				}
+				else
+				{
+					randweight -= thisweight;
+				}
+			}
+			
+			if(pselect != NULL)
+			{
+				this->createNewRole(proleset, atoi(pconfur->getRowValue(pselect, pconfur->ID)),1);
+			}
 		}
 	
 		if(!noEvent)
@@ -1001,11 +1072,31 @@ bool CMyData::hireRole(int idx)
 			break;
 
 		Role* p = m_user.mutable_role()->mutable_shoproles(idx);
-		if(p->hireflag()!=0)
+		if(p->hireflag()==0)
 			break;
 
+		//扣钱
+		CAutoUnitRandomTab* pconfur = TCONF_GET(CAutoUnitRandomTab);
+		if(pconfur == NULL)
+			break;
+
+		int goldNeed = atoi(pconfur->getValue(CStrTool::strDecimal(p->hireflag()).c_str(),pconfur->GOLD));
+		if(!this->modifyGold(0-goldNeed))
+		{
+			this->throwEvent(CMyControl::CMD_DATA_ROLE_HIRED_NO_MONEY);
+			this->postEventsToControl();
+			break;
+		}
+
+		if(m_user.role().roles_size() >= CDataUtil::getOwnUnitMaxByLevel(m_user.account().expr().level()))
+		{
+			this->throwEvent(CMyControl::CMD_DATA_UNIT_OWN_MAX);
+			this->postEventsToControl();
+			break;
+		}
+
 		m_user.mutable_role()->add_roles()->CopyFrom(*p);
-		p->set_hireflag(1);
+		p->set_hireflag(0);
 
 		this->throwEvent(CMyControl::CMD_DATA_ROLE_ATTR_MODIFIED);
 		this->throwEvent(CMyControl::CMD_DATA_ROLE_HIRED);
@@ -1061,11 +1152,7 @@ void CMyData::submitTransaction()
 			break;
 		delete m_userSave;
 		m_userSave = NULL;
-		for(unsigned int i=0; i<m_eventSave.size(); ++i)
-		{
-			CMyControl::getSharedControl()->invokeCmd(m_eventSave[i]);
-		}
-		m_eventSave.clear();
+		postEventsToControl();
 		saveUser();
 	}while(0);
 }
@@ -1098,6 +1185,15 @@ void CMyData::throwEvent(int cmd)
 			break;
 		m_eventSave.push_back(cmd);
 	}while(0);
+}
+
+void CMyData::postEventsToControl()
+{
+	for(unsigned int i=0; i<m_eventSave.size(); ++i)
+	{
+		CMyControl::getSharedControl()->invokeCmd(m_eventSave[i]);
+	}
+	m_eventSave.clear();
 }
 
 CMyData::TransactionGuarder::TransactionGuarder(CMyData* host)
@@ -1256,8 +1352,12 @@ bool CMyData::saveBattleList(vector<int>& roleIdxes, bool onlyCheck)
 		if(i!=roleIdxes.size())
 			break;
 
-		if(total > prs->battlelistmax())
+		if(total > CDataUtil::getFightUnitMaxByLevel(m_user.account().expr().level()))
+		{
+			this->throwEvent(CMyControl::CMD_DATA_UNIT_FIGHT_MAX);
+			this->postEventsToControl();
 			break;
+		}
 
 		if(!mainFound)
 			break;

@@ -2,11 +2,12 @@
 <SkillTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Skill>
 		<ID>1</ID>
-		<Kind>1</Kind>
+    <SEQ>1</SEQ>
+    <LEVEL>1</LEVEL>
 		<Type>1</Type>
 		<Cost>1</Cost>
 		<Chance>100</Chance>
-		<Params>1</Params>
+		<Params>aaaa</Params>
 		<NAME>121</NAME>
 	</Skill>
 	<Skill />

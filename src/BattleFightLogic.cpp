@@ -4,6 +4,9 @@
 #include "StrTool.h"
 #include "BattleFormatConf.h"
 #include "tconfManager.h"
+#include "BattleSkillLogic.h"
+#include "BattleBuffLogic.h"
+#include "BattleLogicDef.h"
 
 CBattleFightLogic::CBattleFightLogic(void)
 {
@@ -44,6 +47,7 @@ int CBattleFightLogic::doGameStep()
 {
 	if(needWait())
 	{
+		//CCLog("need wait");
 		return GAME_STEP_CONTINUE;
 	}
 
@@ -60,7 +64,7 @@ int CBattleFightLogic::doGameStep()
 			ret = onRoundEnd();
 			break;
 		case BATTLE_STATE_UNIT:
-			ret = doAttackStep();
+			ret = tryUnitActive();
 			break;
 		case BATTLE_STATE_END:
 			ret = onGameEnd();
@@ -75,6 +79,7 @@ int CBattleFightLogic::doGameStep()
 
 int CBattleFightLogic::onGameStart()
 {
+	//CCLog("game start");
 	//初始buff计算
 
 	//开始第一个回合
@@ -84,6 +89,8 @@ int CBattleFightLogic::onGameStart()
 
 int CBattleFightLogic::onGameEnd()
 {
+	//CCLog("game end");
+
 	//发送game结束消息
 	if(m_win)
 	{
@@ -93,12 +100,14 @@ int CBattleFightLogic::onGameEnd()
 	{
 		m_msg.msg.mutable_result()->set_win(0);
 	}
+
 	//返回
 	return CAME_STEP_END;
 }
 
 int CBattleFightLogic::onRoundStart()
 {
+	//CCLog("round start %d", m_context.m_round);
 	//发送回合开始消息
 	m_msg.addNewRound();
 	this->startAttack();
@@ -107,20 +116,70 @@ int CBattleFightLogic::onRoundStart()
 
 int CBattleFightLogic::onRoundEnd()
 {
+	//CCLog("round end %d", m_context.m_round);
 	this->startNextRound();
 	return gotoNextStep();
 }
 
-int CBattleFightLogic::doAttackStep()
+int CBattleFightLogic::onUnitActive(CBattleUnitLogic* psrc)
 {
-	//一次攻击
+	//固定的流程
+	EFFECT_CONDITION_TYPE fixedSteps[] = {
+		EFFECT_CONDITION_ACTION_START, 
+		EFFECT_CONDITION_BEFORE_ATTACK,
+		EFFECT_CONDITION_ATTACK, //普通攻击
+		EFFECT_CONDITION_ACTION_END
+	};
+
+	//初始化
+	EFFECT_ACTIVE_CONTEXT activeContext;
+	activeContext.phost = this;
+	activeContext.psrc = psrc;
+	activeContext.pdst = NULL;
+	activeContext.mhd.init(&m_msg, m_context.m_homeTeamTurn);
+
+	for(unsigned int i=0; i < sizeof(fixedSteps)/sizeof(fixedSteps[0]); ++i)
+	{
+		activeContext.control.clear();
+
+		if(fixedSteps[i] != EFFECT_CONDITION_ATTACK)
+		{
+			CBattleLogicEffectManager manager;
+			//选择effect
+			createEffectFromUnit(psrc, fixedSteps[i], manager);
+
+			manager.executeEffects(activeContext);
+		}
+		else
+		{
+			//普通攻击
+			CBattleLogicEffectDefaultAttack effect;
+			effect.active(activeContext);
+		}
+
+		//死了，一了百了
+		if(!psrc->isAlive())
+			return 0;
+
+		if(activeContext.control.breakFlag)
+			break;
+	}
+	
+	checkBuffEnd(psrc);
+
+	return 0;
+}
+
+int CBattleFightLogic::tryUnitActive()
+{
+	//CCLog("try active isHome=%d", m_context.m_homeTeamTurn);
+	//激活自己
 	CBattleTeamLogic* pActiveTeam = getActiveTeam();
-	CBattleTeamLogic* pUnActiveTeam = getUnActiveTeam();
-	CBattleUnitLogic* pdst = pUnActiveTeam->randomFront(); //选择对手
 	CBattleUnitLogic* psrc = pActiveTeam->nextActUnit(); //选择自己
 
 	if(psrc == NULL)//没有可以行动的单位
 	{
+		//CCLog("no active");
 		this->setTeamActed();
 		if(!this->checkRoundOver())
 		{
@@ -129,122 +188,22 @@ int CBattleFightLogic::doAttackStep()
 		return gotoNextStep();
 	}
 
-	psrc->setActed(true);
-
-	if(pdst == NULL)
+	//激活此单位
+	int ret = onUnitActive(psrc);
+	if(ret < 0)
 	{
-		//理论上不可能
-		return gotoNextStep();
-	}
-
-	if(doSkillAttack(psrc, pdst, true)!=0)
-	{
+		CCLog("game error");
+		//错误
 		return GAME_STEP_ERROR;
 	}
 
 	//有可能结束game的地方都检查。。。
-	if(isEnd())
-		return gotoNextStep(); 
-	
-	if(doAttack(psrc, pdst)!=0)
-	{
-		return GAME_STEP_ERROR;
-	}
-
-	//有可能结束game的地方都检查。。。
-	if(isEnd())
-		return gotoNextStep(); 
-
-	if(doSkillAttack(psrc, pdst, false)!=0)
-	{
-		return GAME_STEP_ERROR;
-	}
-
-	//有可能结束game的地方都检查。。。
-	if(isEnd())
+	if(checkEnd())
 		return gotoNextStep(); 
 
 	//交换队伍
 	this->switchTeam();
 	return gotoNextStep();
-}
-
-int CBattleFightLogic::doSkillAttack(CBattleUnitLogic* src, CBattleUnitLogic* dst, bool isBeforeAttack)
-{
-	int ret = -1;
-	do{
-		CAutoSkillTab* skillconfTab = TCONF_GET(CAutoSkillTab);
-		if(!skillconfTab)
-			break;
-
-		for(unsigned int i=0; i<src->skills.size(); ++i)
-		{
-			int skillId = src->skills[i];
-			const TconfRow* prow = skillconfTab->getRowByKey(CStrTool::strDecimal(skillId).c_str());
-			if(!prow)
-				break;
-			
-			const char* strtype = skillconfTab->getRowValue(prow, skillconfTab->TYPE);
-			if(strtype == NULL)
-				break;
-
-			const char* strparams = skillconfTab->getRowValue(prow, skillconfTab->PARAMS);
-			if(strtype == NULL)
-				break;
-
-			int skillType = atoi(strtype);
-			if(skillType == 1)
-			{
-				int dmg = atoi(strparams);
-				if(dst->hp <= dmg)
-				{
-					dst->hp = 0;
-					dst->setAlive(false);
-				}
-				else
-				{
-					dst->hp -= dmg;
-				}
-
-				BattleAction* pba = newAtkMsgAction(BattleAction::ACTION_SKILL, src->idx, dst->idx,skillType);
-				pba->add_params(CStrTool::strDecimal(dmg));
-				pba->add_params(CStrTool::strDecimal(dst->hp));
-
-				//设立结束检查点
-				if(checkEnd())
-				{
-					return 0;
-				}
-			}
-		}
-
-		ret = 0;
-	}while(0);
-	return ret;
-}
-
-
-int CBattleFightLogic::doAttack(CBattleUnitLogic* src, CBattleUnitLogic* dst)
-{
-	int dmg = src->atk - dst->def;
-	if(dmg <= 0)
-		dmg = 1;
-
-	if(dst->hp <= dmg)
-	{
-		dst->hp = 0;
-		dst->setAlive(false);
-	}
-	else
-	{
-		dst->hp -= dmg;
-	}
-
-	BattleAction* pba = newAtkMsgAction(BattleAction::ACTION_DMG, src->idx, dst->idx);
-	pba->add_params(CStrTool::strDecimal(dmg));
-	pba->add_params(CStrTool::strDecimal(dst->hp));
-
-	return 0;
 }
 
 void CBattleFightLogic::initHomeTeam()
@@ -327,4 +286,72 @@ void CBattleFightLogic::startNextRound()
 	m_context.m_homeActed = m_context.m_awayActed = false;
 	m_home.clearAct();
 	m_away.clearAct();
+}
+
+void CBattleFightLogic::checkBuffEnd(CBattleUnitLogic* activedUnit)
+{
+	CBattleUnitLogic* punit = activedUnit;
+	if(punit!=NULL && punit->isAlive())
+	{
+		CBattleUnitLogic::TYPE_BUFF_LIST::iterator cur;
+		CBattleUnitLogic::TYPE_BUFF_LIST::iterator it=punit->buffs.begin();
+		while(it!=punit->buffs.end())
+		{
+			cur = it;
+			++it;
+			cur->updateCnt();
+			if(cur->isEnd())
+			{
+				m_msg.addBuffEndAction(cur->id, punit->idx, m_context.m_homeTeamTurn, cur->fromIdx);
+				punit->buffs.erase(cur);
+			}
+		}
+	}
+}
+
+
+bool CBattleFightLogic::createEffectFromUnit(CBattleUnitLogic* ptarget, EFFECT_CONDITION_TYPE condition,
+	CBattleLogicEffectManager& manager)
+{
+	//遍历skill
+	unsigned int i=0;
+	for(i=0; i<ptarget->skills.size(); ++i)
+	{
+		int skillid = ptarget->skills[i];
+		CBattleLogicEffect* newSkillEffect = CBattleLogicEffectFactory::getInstance()->createEffectBySkill(skillid);
+		if(newSkillEffect!=NULL)
+		{
+			if(newSkillEffect->getCondition() != condition)
+			{
+				delete newSkillEffect;
+			}
+			else
+			{
+				if(!manager.addEffect(newSkillEffect))
+				{
+					delete newSkillEffect;
+				}
+			}
+		}
+	}
+
+	//遍历buff
+	CBattleUnitLogic::TYPE_BUFF_LIST::iterator it;
+	for(it=ptarget->buffs.begin(); it!=ptarget->buffs.end(); ++it)
+	{
+		CBattleLogicEffect* newBuffEffect = CBattleLogicEffectFactory::getInstance()->createEffectByBuff(&(*it));
+		if(newBuffEffect->getCondition() != condition)
+		{
+			delete newBuffEffect;
+		}
+		else 
+		{
+			if(!manager.addEffect(newBuffEffect))
+			{
+				delete newBuffEffect;
+			}
+		}
+	}
+
+	return true;
 }

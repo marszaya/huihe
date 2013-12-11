@@ -13,4 +13,8 @@ public:
 	static int getEffectValue(int subtype);
 	static int getSellPrice(int subtype);
 	static int getMajorType(int subtype);
+
+	//limits by level
+	static int getFightUnitMaxByLevel(int userlevel);
+	static int getOwnUnitMaxByLevel(int userlevel);
 };

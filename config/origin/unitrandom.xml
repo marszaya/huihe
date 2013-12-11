@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<UnitRandomTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <UnitRandom>
+		<ID>1</ID>
+    <Gold>1</Gold>
+    <Items>0</Items>
+    <RandomSet>1</RandomSet>
+		<Weight>1</Weight>
+	</UnitRandom>
+  <UnitRandom></UnitRandom>
+</UnitRandomTab>

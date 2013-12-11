@@ -66,6 +66,8 @@ int CTconfManager::loadAll(const char* configDir)
 	TCONF_LOAD(CAutoMapTab, string(configDir).append("/conf/map.bin").c_str(), 0);
 	TCONF_LOAD(CAutoSkillTab, string(configDir).append("/conf/skill.bin").c_str(), 0);
 	TCONF_LOAD(CAutoUnitShowTab, string(configDir).append("/conf/unitshow.bin").c_str(), 0);
-
+	TCONF_LOAD(CAutoUnitTab, string(configDir).append("/conf/unit.bin").c_str(), 0);
+	TCONF_LOAD(CAutoUnitBuyTab, string(configDir).append("/conf/unitbuy.bin").c_str(), 0);
+	TCONF_LOAD(CAutoUnitRandomTab, string(configDir).append("/conf/unitrandom.bin").c_str(), 0);
 	return 0;
 }

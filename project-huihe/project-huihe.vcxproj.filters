@@ -273,6 +273,33 @@
     <ClInclude Include="..\inc\AppMacros.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\AutoUnitTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoUnitBuyTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AutoUnitRandomTab.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\DEFINED_VALUES.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleSkillLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleLogicDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleBuffLogic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleProcedureBeCast.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BattleLogicEffect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AppDelegate.cpp">
@@ -307,9 +334,6 @@
     </ClCompile>
     <ClCompile Include="..\src\battlemsg.pb.cc">
       <Filter>源文件\tconf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\DataUtil.cpp">
-      <Filter>源文件\data</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MyData.cpp">
       <Filter>源文件\data</Filter>
@@ -439,6 +463,21 @@
     </ClCompile>
     <ClCompile Include="..\src\BattleResult.cpp">
       <Filter>源文件\view\battle\fighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DataUtil.cpp">
+      <Filter>源文件\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleSkillLogic.cpp">
+      <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleBuffLogic.cpp">
+      <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleProcedureBeCast.cpp">
+      <Filter>源文件\view\battle\fighting\procedure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BattleLogicEffect.cpp">
+      <Filter>源文件\data\battle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

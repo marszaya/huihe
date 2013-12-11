@@ -64,9 +64,10 @@ public:
 	virtual void update(float dt);
 
 protected:
-	void disableAllMenu();
-	void checkNextEnable();
+	void enableNext();
 	void disableNext();
+	void disableAuto();
+	void enableAuto();
 
 	void showResult();
 	virtual void onFrameMsg(CCObject* msg);

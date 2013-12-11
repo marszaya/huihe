@@ -12,6 +12,9 @@
 #include "AutoMapTab.h"
 #include "AutoSkillTab.h"
 #include "AutoUnitShowTab.h"
+#include "AutoUnitTab.h"
+#include "AutoUnitBuyTab.h"
+#include "AutoUnitRandomTab.h"
 #include <map>
 using namespace std;
 

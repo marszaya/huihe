@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<UnitBuyTab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<UnitBuy>
+		<ID>1</ID>
+		<Gold>1</Gold>
+		<Items>0</Items>
+    <Where>1</Where>
+    <limits>0</limits>
+	</UnitBuy>
+  <UnitBuy></UnitBuy>
+</UnitBuyTab>
