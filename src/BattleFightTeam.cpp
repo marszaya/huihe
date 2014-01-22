@@ -6,6 +6,8 @@
 #include "tconfManager.h"
 #include "STRTABLE.h"
 
+int CBattleUnitLogic::ID_COUNTER = 0;
+
 CBattleUnitLogic::CBattleUnitLogic()
 {
 }

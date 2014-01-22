@@ -4,7 +4,7 @@
 #include "BattleFightLogic.h"
 #include "FightEffect.h"
 #include "BattleSkillName.h"
-
+#include "BuffIconWindow.h"
 
 CBattleFightUnit::CBattleFightUnit(void)
 {
@@ -244,23 +244,37 @@ void CBattleFightUnit::callbackRemoveEffect(CCObject* p)
 }
 
 
-void CBattleFightUnit::addBuffIcon(int iconid, int fromIdx)
+void CBattleFightUnit::addBuffIcon(int id, int iconid, int effectCnt)
 {
 	if(m_pslide == NULL)
 		return;
 	
-	CCSprite* psprite = CCMyHelper::createZeroAnchorFrameSprite(createBuffFrameName(iconid).c_str());
-	psprite->setScale(0.4);
 	char tmp[64]={0};
-	sprintf(tmp, "%d_%d", iconid, fromIdx);
-	m_pslide->addSlide(psprite, tmp);
+	sprintf(tmp, "%d", id);
+	CCNode* pold = m_pslide->getSlide(tmp);
+	if(pold == NULL)
+	{
+		CBuffIconWindow* buffWindow = CBuffIconWindow::create(iconid, effectCnt);
+		if(buffWindow)
+		{
+			m_pslide->addSlide(buffWindow, tmp);
+		}	
+	}
+	else
+	{
+		CBuffIconWindow* buffWindow = dynamic_cast<CBuffIconWindow*>(pold);
+		if(buffWindow)
+		{
+			buffWindow->changeEffectCnt(effectCnt);
+		}
+	}
 }
 
-void CBattleFightUnit::delBuffIcon(int iconid, int fromIdx)
+void CBattleFightUnit::delBuffIcon(int id)
 {
 	if(m_pslide == NULL)
 		return;
 	char tmp[64]={0};
-	sprintf(tmp, "%d_%d", iconid, fromIdx);
+	sprintf(tmp, "%d", id);
 	m_pslide->delSlide(tmp);
 }

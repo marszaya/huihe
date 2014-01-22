@@ -2,12 +2,8 @@
 #include "BattleMap.h"
 #include "MyControl.h"
 
-
-
 CBattleProcedureAttackRaged::CBattleProcedureAttackRaged(void)
 {
-	m_srcDone = false;
-	m_dstDone = false;
 }
 
 CBattleProcedureAttackRaged::~CBattleProcedureAttackRaged(void)
@@ -31,8 +27,6 @@ bool CBattleProcedureAttackRaged::initCBattleProcedureAttackRaged()
 {
 	bool ret=false;
 	do{
-		m_srcDone = false;
-		m_dstDone = false;
 		ret = true;
 	}while(0);
 
@@ -52,30 +46,39 @@ bool CBattleProcedureAttackRaged::nextStep(int stepToCheck)
 		return false;
 	}
 
+	//for short
+	int srcTag = this->srcInfo.tagId;
+	CCPoint srcPos(this->srcInfo.x, this->srcInfo.y);
+
 	if(stepToCheck == 0)
 	{
 		//开始步骤，攻击
 		CCEActionParam* param = new CCEActionParam(m_procedureTag , 1);
 		
-		CBattleFightUnit* punit = pMap->getFightUnit(this->m_srcTag);
+		CBattleFightUnit* punit = pMap->getFightUnit(srcTag);
 		if(punit)
 		{
 			punit->paramForNextCall(param);
-			punit->actionDoAttack(this->m_skillId);
+			punit->actionDoAttack(this->skillId);
 		}
 		
 		param->release();
 	}
 	else if(stepToCheck == 1)
 	{
-		//发出子弹
+		//发出子弹,多個目標
 		CCEActionParam* param = new CCEActionParam(m_procedureTag , 2);
-		CBattleFightUnit* punit = pMap->getFightUnit(this->m_srcTag);
+		CBattleFightUnit* punit = pMap->getFightUnit(srcTag);
 		if(punit)
 		{
 			punit->getFightUnit()->stay();
 			float dt=0.1;//初始值保险
-			pMap->showBullets(m_bulletConf.c_str(), m_srcPos, m_dstPos, &dt);
+			for(unsigned int di=0; di<this->dstInfos.size(); ++di)
+			{
+				CCPoint dstPos(dstInfos[di].x, dstInfos[di].y);
+				pMap->showBullets(this->bulletConf.c_str(), srcPos, dstPos, &dt);
+			}
+			
 			punit->paramForNextCall(param);
 			punit->actionDelay(dt);
 		}
@@ -83,28 +86,22 @@ bool CBattleProcedureAttackRaged::nextStep(int stepToCheck)
 	}
 	else if(stepToCheck == 2)
 	{
-		CCEActionParam* param2 = new CCEActionParam(m_procedureTag , 11);
-		CBattleFightUnit* punit2 = pMap->getFightUnit(this->m_dstTag);
-		if(punit2)
+		//受到攻擊方
+		for(unsigned int di=0; di<this->dstInfos.size(); ++di)
 		{
-			punit2->paramForNextCall(param2);
-			punit2->actionShowDmg(this->m_dmg);
-		}
-		param2->release();
-
-		m_srcDone = true;
-		if(m_srcDone && m_dstDone)
-		{
-			return false;
+			CCEActionParam* param2 = new CCEActionParam(m_procedureTag , 10+di);
+			CBattleFightUnit* punit2 = pMap->getFightUnit(this->dstInfos[di].tagId);
+			if(punit2)
+			{
+				punit2->paramForNextCall(param2);
+				punit2->actionShowDmg(this->dstInfos[di].dmg);
+			}
+			param2->release();
 		}
 	}
-	else if(stepToCheck == 11)
+	else if(stepToCheck >= 10)
 	{
-		m_dstDone = true;
-		if(m_srcDone && m_dstDone)
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;

@@ -39,6 +39,17 @@ bool CCESlideWindow::initCCESlideWindow()
 	return ret;
 }
 
+CCNode* CCESlideWindow::getSlide(const string& id)
+{
+	int idx = 0;
+	if((idx=findSlide(id))==-1)
+	{
+		return NULL;
+	}
+
+	return this->m_slides[idx];
+}
+
 int CCESlideWindow::findSlide(const string& id)
 {
 	TEYP_INDEX_MAP::iterator it = m_index.find(id);

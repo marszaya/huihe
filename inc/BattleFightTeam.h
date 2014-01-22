@@ -14,12 +14,17 @@ class CBattleUnitLogic
 public:
 	static const int MAX_SPEED=1000000;
 	static const int MAX_BUFF_PARAM=10;
+	static int ID_COUNTER;
+
 	struct BUFF
 	{
-		int fromIdx; //使用msg中转化过的idx
-		int id;
+		int id; //獨一無二的id
+		int fromIdx; //使用msg中转化过的idx	
+		int fromSkillSeq; //從那個技能seq生成的
+		int fromSkillID; //從那個技能Id生成的
 		int remainCnt; //剩余次数，-1=永久
 		int usedCnt; //使用过次数
+		int effectCnt; //累加效果
 		int effectType; //效果类型
 		int param[MAX_BUFF_PARAM]; //可变参数
 
@@ -27,9 +32,12 @@ public:
 		{
 			fromIdx = -1;
 			id = 0;
+			fromSkillID = 0;
+			fromSkillSeq = 0;
 			remainCnt = -1;
 			usedCnt = 0;
 			effectType = 0;
+			effectCnt = 0;
 			memset(param,0, sizeof(param));
 		}
 
@@ -48,6 +56,11 @@ public:
 		inline bool isEnd()
 		{
 			return remainCnt==0;
+		}
+
+		inline void assignID()
+		{
+			this->id = (++ID_COUNTER);
 		}
 	};
 

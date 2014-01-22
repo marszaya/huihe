@@ -37,6 +37,9 @@ int CBattleLogicEffectDefaultAttack::active(EFFECT_ACTIVE_CONTEXT& con)
 			//固定增加
 			con.psrc->energy += 100;
 		}
+
+		BattleAction* patkmsg = con.mhd.pmsg->addAtkMsgAction(con.psrc->idx, con.attack.skillid, 
+				con.psrc->energy,con.mhd.isHomeTurn);
 	
 		bool end=false;
 		for(unsigned int i=0; i<output.size() && !end; ++i)
@@ -44,9 +47,6 @@ int CBattleLogicEffectDefaultAttack::active(EFFECT_ACTIVE_CONTEXT& con)
 			con.pdst = output[i];
 			atk.attrOffset.offsetDefPercent = 0;
 			atk.attrOffset.offsetDef = 0;
-			BattleAction* patkmsg = con.mhd.pmsg->addAtkMsgAction(con.psrc->idx, con.attack.skillid, 
-				con.psrc->energy,con.mhd.isHomeTurn);
-
 			for(unsigned int j=0; j < sizeof(fixedSteps)/sizeof(fixedSteps[0]); ++j)
 			{
 				con.control.clear();
@@ -185,7 +185,12 @@ bool CBattleLogicEffectSkill::bindSkill(int id)
 		if(strtype == NULL)
 			break;
 
+		const char* strseq = skillconfTab->getRowValue(prow, skillconfTab->SEQ);
+		if(strseq == NULL)
+			break;
+
 		m_config.skilltype = atoi(strtype);
+		m_config.skillseq = atoi(strseq);
 		m_config.cost = atoi(skillconfTab->getRowValue(prow, skillconfTab->COST));
 		m_chance = atoi(skillconfTab->getRowValue(prow, skillconfTab->CHANCE));
 		m_config.vparams.clear();
@@ -197,54 +202,131 @@ bool CBattleLogicEffectSkill::bindSkill(int id)
 	return ret;
 }
 
-
-void CBattleLogicEffectSkill::addBuff(CBattleUnitLogic* unit, bool unitIsSrc, 
-	CBattleUnitLogic::BUFF& buff,EFFECT_ACTIVE_CONTEXT& con, int overlap)
+void CBattleLogicEffectSkill::addBuff(CBattleUnitLogic* unit, bool unitIsSrc, CBattleUnitLogic::BUFF& buff, EFFECT_ACTIVE_CONTEXT& con,  
+	vector<CBattleLogicEffectSkill::BUFF_MATCH_CONDITION>& conditions, 
+	vector<CBattleLogicEffectSkill::BUFF_MATCH_OPTION>& options, int effectCntMax)
 {
 	CBattleUnitLogic::TYPE_BUFF_LIST::iterator cur=unit->buffs.begin();
+	bool newBuffMatched = false;
+	CBattleUnitLogic::BUFF* buffOfMsg = NULL;
 	while(cur!=unit->buffs.end())
 	{
-		if(cur->id == buff.id && cur->fromIdx == buff.fromIdx)
+		unsigned int i=0;
+		bool end = false;
+		for(; i<conditions.size() && !end; ++i)
 		{
-			if(overlap == 0)
+			switch (conditions[i])
 			{
-				//只更新剩余回合数
-				cur->remainCnt = buff.remainCnt;
-			}
-			else if(overlap == -1)
-			{
-				//重复不处理
-			}
-			else if(overlap == 1)
-			{
-				//当作新的buff处理
+			case BUFF_MATCH_EFFECT:
+				end = !(cur->effectType == buff.effectType);
 				break;
+			case BUFF_MATCH_SEQ:
+				end = !(cur->fromSkillSeq == buff.fromSkillSeq);
+				break;
+			case BUFF_MATCH_SKILLID:
+				end = !(cur->fromSkillID == buff.fromSkillID);
+				break;
+			case BUFF_MATCH_FROMIDX:
+				end = !(buff.fromIdx >= cur->fromIdx);
+				break;
+			default:
+				end = true;
 			}
-
-			//中断流程
-			return;
 		}
-			
-		++cur;
+
+		if(i!=conditions.size()) //not match
+		{
+			++cur;
+			continue;
+		}
+
+		newBuffMatched = true;
+
+		//do options
+		i=0;
+		end = false;
+		for(; i<options.size() && !end; ++i)
+		{
+			switch (options[i])
+			{
+			case BUFF_MATCH_FILTER_SKILLID_BIGER:
+				if(buff.fromSkillID <= cur->fromSkillID)
+					end = true;
+				break;
+			case BUFF_MATCH_FILTER_SKILLID_BIGER_OR_EQUAL:
+				if(buff.fromSkillID < cur->fromSkillID)
+					end = true;
+				break;
+			case BUFF_MATCH_DISCARD:
+				end = true;
+				break;
+			case BUFF_MATCH_REPLACE:
+				*cur = buff;
+				{
+					//id變更了，發送buff結束
+					bool isHome;
+					if(unitIsSrc)
+						isHome = con.mhd.isHomeTurn;
+					else
+						isHome = !con.mhd.isHomeTurn;
+					con.mhd.pmsg->addBuffEndAction(buff.id, unit->idx, isHome, buff.fromIdx);				
+				}
+				buffOfMsg = &(*cur);
+				end = true;
+				break;
+			case BUFF_MATCH_RESET_REMAIN:
+				cur->remainCnt = buff.remainCnt;
+				buffOfMsg = &(*cur);
+				break;
+			case BUFF_MATCH_INCREASE_EFFECTCNT:
+				if(effectCntMax != cur->effectCnt)
+				{
+					cur->effectCnt++;
+					buffOfMsg = &(*cur);
+				}
+				break;
+			default:
+				end = true;
+			}
+		}
+
+		break;
 	}
 
-	unit->buffs.push_back(buff);
-	bool isHome;
-	if(unitIsSrc)
-		isHome = con.mhd.isHomeTurn;
-	else
-		isHome = !con.mhd.isHomeTurn;
-	con.mhd.pmsg->addBuffBeginAction(buff.id, unit->idx, isHome, buff.fromIdx);
+	//新增加
+	if(!newBuffMatched)
+	{
+		unit->buffs.push_back(buff);
+		buffOfMsg = &buff;
+	}
+
+	if(buffOfMsg!=NULL)
+	{
+		bool isHome;
+		if(unitIsSrc)
+			isHome = con.mhd.isHomeTurn;
+		else
+			isHome = !con.mhd.isHomeTurn;
+		con.mhd.pmsg->addBuffBeginAction(buffOfMsg->id, unit->idx, isHome, buffOfMsg->fromIdx,
+			buffOfMsg->fromSkillID, buffOfMsg->effectCnt, effectCntMax);
+	}
+	
 }
 
 void CBattleLogicEffectSkill::srcCastBuff(EFFECT_ACTIVE_CONTEXT& con, CBattleUnitLogic::BUFF& newBuff)
 {
-	newBuff.id = m_config.skillid;
+	newBuff.assignID();
+	newBuff.fromSkillID = m_config.skillid;
 	newBuff.effectType = m_config.skilltype;
+	newBuff.fromSkillSeq = m_config.skillseq;
+	newBuff.effectCnt = 1;
+
 	if(m_config.vparams.size() < 1)
 		return;
 	newBuff.remainCnt = atoi(m_config.vparams[0].c_str());
+
 	newBuff.fromIdx = con.mhd.pmsg->makeMsgUnitIdx(con.psrc->idx, con.mhd.isHomeTurn);
+	
 	for(unsigned int i=1; i<m_config.vparams.size(); ++i)
 	{
 		newBuff.param[i-1] = atoi(m_config.vparams[i].c_str());
@@ -318,8 +400,8 @@ CBattleLogicEffect* CBattleLogicEffectFactory::createEffectByBuff(CBattleUnitLog
 	{
 		if(p == NULL)
 			break;
-		REGIST_MAP::iterator it = m_skills.find(p->effectType);
-		if(it == m_skills.end())
+		REGIST_MAP::iterator it = m_buffs.find(p->effectType);
+		if(it == m_buffs.end())
 			break;
 		ret = it->second->clone();
 		CBattleLogicEffectBuff* pbuff = dynamic_cast<CBattleLogicEffectBuff*>(ret);
@@ -347,7 +429,12 @@ CBattleLogicEffectManager::~CBattleLogicEffectManager()
 	PRIORTY_MAP::iterator it;
 	for(it = m_map.begin(); it!=m_map.end(); ++it)
 	{
-		delete it->second;
+		PRIORTY_MAP_ITEM* pv = it->second;
+		for(PRIORTY_MAP_ITEM::iterator vit = pv->begin(); vit != pv->end(); ++ vit)
+		{
+			delete (*vit);
+		}
+		delete pv;
 		it->second = NULL;
 	}
 }
@@ -359,10 +446,14 @@ bool CBattleLogicEffectManager::addEffect(CBattleLogicEffect* p)
 		int pri = p->getPriority();
 		if(m_map.find(pri) != m_map.end())
 		{
-			break;
+			m_map[pri]->push_back(p);
 		}
-
-		m_map.insert(make_pair(pri, p));
+		else
+		{
+			PRIORTY_MAP_ITEM* pnewV = new PRIORTY_MAP_ITEM;
+			pnewV->push_back(p);
+			m_map.insert(make_pair(pri, pnewV));
+		}
 		ret = true;
 	}while(0);
 
@@ -376,9 +467,17 @@ void CBattleLogicEffectManager::executeEffects(EFFECT_ACTIVE_CONTEXT& context)
 	while(!m_map.empty())
 	{
 		it = m_map.begin();
-		CBattleLogicEffect* p = it->second;
+		PRIORTY_MAP_ITEM* pv = it->second;
 		m_map.erase(it);
-		p->active(context);
-		delete p;
+
+		while(pv!=NULL && pv->size() > 0)
+		{
+			CBattleLogicEffect* p = (*pv)[pv->size()-1];
+			pv->pop_back();
+			p->active(context);
+			delete p;
+		}
+		
+		delete pv;
 	}
 }

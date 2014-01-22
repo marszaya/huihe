@@ -80,3 +80,55 @@ public:
 		return new CBattleSkillLogicDebuffDefDown;
 	}
 };
+
+class CBattleSkillLogicBuffAttackUp: public CBattleLogicEffectSkill
+{
+public:
+	virtual int getType(){return 5;}
+
+	virtual EFFECT_CONDITION_TYPE getCondition() {return EFFECT_CONDITION_AFTER_ATTACK;}
+
+	virtual int active(EFFECT_ACTIVE_CONTEXT& con);
+
+	virtual int getPriority() {return EFFECT_PRIORITY_SKILL_DEBUFF_ATTACKUP;}
+
+	virtual CBattleLogicEffect* clone()
+	{
+		return new CBattleSkillLogicBuffAttackUp;
+	}
+};
+
+//剑刃乱舞 攻击对方全体
+class CBattleSkillLogicMutilAttack: public CBattleLogicEffectSkill
+{
+public:
+	virtual int getType(){return 6;}
+
+	virtual EFFECT_CONDITION_TYPE getCondition() {return EFFECT_CONDITION_BEFORE_ATTACK;}
+
+	virtual int active(EFFECT_ACTIVE_CONTEXT& con);
+
+	virtual int getPriority() {return EFFECT_PRIORITY_SKILL_MUTIL_ATTCK;}
+
+	virtual CBattleLogicEffect* clone()
+	{
+		return new CBattleSkillLogicMutilAttack;
+	}
+};
+
+class CBattleSkillLogicBuffAttackDown: public CBattleLogicEffectSkill
+{
+public:
+	virtual int getType(){return 7;}
+
+	virtual EFFECT_CONDITION_TYPE getCondition() {return EFFECT_CONDITION_AFTER_ATTACK;}
+
+	virtual int active(EFFECT_ACTIVE_CONTEXT& con);
+
+	virtual int getPriority() {return EFFECT_PRIORITY_SKILL_DEBUFF_ATTACKDOWN;}
+
+	virtual CBattleLogicEffect* clone()
+	{
+		return new CBattleSkillLogicBuffAttackDown;
+	}
+};

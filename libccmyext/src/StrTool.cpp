@@ -1,4 +1,5 @@
 #include "StrTool.h"
+#include <stdlib.h>
 
 CStrTool::CStrTool(void)
 {
@@ -44,7 +45,7 @@ string CStrTool::escapeStr(const char* str, vector<string>* pVars)
 	ret.reserve(strlen(str)*2);
 	do{
 		int i=0;
-		for(; str[i]!=NULL; ++i)
+		for(; str[i]!=0; ++i)
 		{
 			char cur = str[i];
 			if(cur == '\\')
@@ -83,9 +84,9 @@ void CStrTool::split(const char* input, const char* delim, vector<string>& outpu
 {
 	int start = 0;
 	int i=0;
-	for(; input[i]!=NULL; ++i)
+	for(; input[i]!=0; ++i)
 	{
-		for(int j=0; delim[j]!=NULL; ++j)
+		for(int j=0; delim[j]!=0; ++j)
 		{
 			if(input[i] == delim[j])
 			{

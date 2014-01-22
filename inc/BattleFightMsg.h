@@ -46,22 +46,29 @@ public:
 		pba->set_srcunitidx(makeMsgUnitIdx(unitidx, isHome));
 	}
 
-	inline void addBuffBeginAction(int buffid, int unitidx, bool isHome, int fromIdx)
+	inline BattleAction* addBuffBeginAction(int buffid, int unitidx, bool isHome, int fromIdx, 
+		int fromSkillId, int effectCnt, int maxEffectCnt)
 	{
 		BattleAction* pba = addNewAction();
 		pba->set_type(BattleAction::ACTION_BUFF_BEGIN);
 		pba->set_srcunitidx(fromIdx);
 		pba->add_dstunitidxes(makeMsgUnitIdx(unitidx, isHome));
 		pba->set_id(buffid);
+		pba->add_params(CStrTool::strDecimal(fromSkillId));
+		pba->add_params(CStrTool::strDecimal(effectCnt));
+		pba->add_params(CStrTool::strDecimal(maxEffectCnt));
+		return pba;
 	}
 
-	inline void addBuffEndAction(int buffid, int unitidx, bool isHome, int fromIdx)
+	inline BattleAction* addBuffEndAction(int buffid, int unitidx, bool isHome, int fromIdx)
 	{
 		BattleAction* pba = addNewAction();
 		pba->set_type(BattleAction::ACTION_BUFF_END);
 		pba->set_srcunitidx(fromIdx);
 		pba->add_dstunitidxes(makeMsgUnitIdx(unitidx, isHome));
 		pba->set_id(buffid);
+
+		return pba;
 	}
 
 	inline BattleAction* addBeCastAction(int castid, int unitidx, bool isHome)

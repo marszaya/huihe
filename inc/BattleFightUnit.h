@@ -1,10 +1,12 @@
 #pragma once
 //#include "CWindowBase.h"
+#include "tconfManager.h"
 #include "CActionManager.h"
 #include "FightUnit.h"
 #include "CBarBase.h"
 #include <string>
 #include "CSlideWindow.h"
+#include "StrTool.h"
 using namespace std;
 
 class CBattleUnitLogic;
@@ -45,8 +47,8 @@ public:
 	void actionDelay(float dt);
 	void actionEffect(int effectid);
 
-	void addBuffIcon(int iconid, int fromIdx);
-	void delBuffIcon(int iconid, int fromIdx);
+	void addBuffIcon(int id, int iconid, int effectCnt);
+	void delBuffIcon(int id);
 	
 	void updateHp();
 	void updateEnergy();
@@ -58,13 +60,6 @@ protected:
 	void addDmgNumber(int dmg, float duration);
 	void addEffect(int effectid, float& durationOut);
 	void addSkillName(int skillid, float duration);
-
-	inline string createBuffFrameName(int id)
-	{
-		char buff[32] = {0};
-		sprintf(buff, "buff%d.png", id);
-		return buff;
-	}
 
 protected:
 	CFightUnit* m_fightUnit;

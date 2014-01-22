@@ -99,8 +99,7 @@ bool CRoleWindow::updateRoleSelect()
 
 void CRoleWindow::onClose(CCObject* target)
 {
-	CMyControl::getSharedControl()->invokeCmd(CMyControl::CMD_MAINSCENE_POPUPCLOSE);
-	this->removeFromParentAndCleanup(true);
+	CMyControl::getSharedControl()->invokeCmd(CMyControl::CMD_MAINSCENE_POPUPCLOSE, this);
 }
 
 CCWindowBase* CRoleWindow::createRoleInfoWindow()

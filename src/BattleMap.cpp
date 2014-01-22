@@ -11,6 +11,8 @@
 #include "tconfManager.h"
 #include "StrTool.h"
 #include "BattleFormatConf.h"
+#include <vector>
+using namespace std;
 
 CBattleWindowMap::CBattleWindowMap(void)
 {
@@ -103,29 +105,15 @@ CBattleFightUnit* CBattleWindowMap::getFightUnit(int tagId)
 	return pret;
 }
 
-void CBattleWindowMap::doAttack(int srcTagId, int dstTagId, int dmg, int skillId)
+void CBattleWindowMap::doAttack(int srcTagId, vector<int>& dstTagIds, vector<int>& dmgs, int skillId)
 {
 	do{
-		CBattleFightUnit* src = getFightUnit(srcTagId);
-		CBattleFightUnit* dst =  getFightUnit(dstTagId);
-		if(!src || !dst)
+		if(dstTagIds.size()==0 || dstTagIds.size() != dmgs.size())
 			break;
 
-		CCPoint srcPos; 
-		CCPoint dstPos;
-		m_ptable->getPos(src->m_y, src->m_x,  &srcPos, src);
-		m_ptable->getPos(dst->m_y, dst->m_x,  &dstPos, dst);
-		if(dst->getFightUnit()->getFlip())
-		{
-			dstPos.x -= 20;
-		}
-		else
-		{
-			dstPos.x += 20;
-		}
-		
-		src->m_spd = this->getSpd();
-		dst->m_spd = this->getSpd();
+		CBattleFightUnit* src = getFightUnit(srcTagId);
+		if(!src)
+			break;
 
 		//分远近
 		int showtype = src->getFightUnit()->getUnitID();
@@ -136,42 +124,68 @@ void CBattleWindowMap::doAttack(int srcTagId, int dstTagId, int dmg, int skillId
 		const char* isranged = unitshow->getValue(CStrTool::strDecimal(showtype).c_str(), unitshow->RANGED);
 		if(isranged == NULL)
 			break;
+		int branged = atoi(isranged);
 
 		const char* bulletConf = unitshow->getValue(CStrTool::strDecimal(showtype).c_str(), unitshow->BULLET);
 		if(bulletConf == NULL)
 			break;
 
-		if(atoi(isranged) == 0)
+		CBattleProcedureAttack* procedureAttack = NULL;
+		if(branged == 0)
 		{
-			CBattleProcedureAttack* pp = CBattleProcedureAttack::create();
-			if(!pp)
-				break;
-
-			pp->m_srcPos = srcPos;
-			pp->m_dstPos = dstPos;
-			pp->m_srcTag = srcTagId;
-			pp->m_dstTag = dstTagId;
-			pp->m_dmg = dmg;
-			pp->m_skillId = skillId;
-
-			this->startProcedure(pp);
+			//近戰
+			procedureAttack = CBattleProcedureAttack::create();
 		}
 		else
 		{
-			CBattleProcedureAttackRaged* pp = CBattleProcedureAttackRaged::create();
-			if(!pp)
+			//遠程
+			CBattleProcedureAttackRaged* tmp = CBattleProcedureAttackRaged::create();
+			if(tmp==NULL)
 				break;
 
-			pp->m_srcTag = srcTagId;
-			pp->m_dstTag = dstTagId;
-			pp->m_dmg = dmg;
-			pp->m_dstPos = dstPos;
-			pp->m_srcPos = srcPos;
-			pp->m_bulletConf = bulletConf;
-			pp->m_skillId = skillId;
+			tmp->bulletConf = bulletConf;
 
-			this->startProcedure(pp);
+			procedureAttack = static_cast<CBattleProcedureAttack*>(tmp);
 		}
+
+		if(procedureAttack == NULL)
+			break;
+
+
+		//技能表現需要id
+		procedureAttack->skillId = skillId;
+
+		//攻擊方配置
+		CCPoint pos;
+		m_ptable->getPos(src->m_y, src->m_x,  &pos, src);
+		procedureAttack->srcInfo.set(srcTagId,pos.x, pos.y,0);
+		src->m_spd = this->getSpd(); //播放速度
+
+		for(unsigned int i=0; i < dstTagIds.size(); ++i)
+		{
+			CBattleFightUnit* dst =  getFightUnit(dstTagIds[i]);
+			if(!dst)
+				break;
+
+			dst->m_spd = this->getSpd(); //播放速度
+			
+			CBattleMapAttackInfo desInfo;
+			m_ptable->getPos(dst->m_y, dst->m_x,  &pos, dst);
+			//修正位置
+			if(dst->getFightUnit()->getFlip())
+			{
+				pos.x -= 20;
+			}
+			else
+			{
+				pos.x += 20;
+			}
+
+			desInfo.set(dstTagIds[i], pos.x, pos.y, dmgs[i]);
+			procedureAttack->dstInfos.push_back(desInfo);
+		}
+
+		this->startProcedure(procedureAttack);
 	}while(0);
 }
 
@@ -204,28 +218,45 @@ void CBattleWindowMap::showBullets(const char* bulletConf,
 			break;
 		int effectID = atoi(output[0].c_str());
 		int effectSubID = atoi(output[1].c_str());
+		CCNode* effcetNode = NULL;
 
-		CCEActionEffectAfterImage::CAfterImageConfig conf(
-			CFightEffectImg::getFrameName(effectID, effectSubID).c_str(),
-			1, 0.05/spd, 3, 0.5, 0.3, 255, 155);
+		//暫時這樣寫
+		if(effectSubID == 1)
+		{
+			CCEActionEffectAfterImage::CAfterImageConfig conf(
+				CFightEffectImg::getFrameName(effectID, effectSubID).c_str(),
+				1, 0.05/spd, 3, 0.5, 0.3, 255, 155);
 
-		CCEActionEffectAfterImage* fightEffect = CCEActionEffectAfterImage::create(conf);
-		if(!fightEffect)
-			break;
+			CCEActionEffectAfterImage* fightEffect = CCEActionEffectAfterImage::create(conf);
+			if(!fightEffect)
+				break;
 
-		CCMoveTo* pmv = CCMoveTo::create(dt, ccp(dstPos.x-srcPos.x, dstPos.y - srcPos.y));
-		if(!pmv)
-			break;
+			CCMoveTo* pmv = CCMoveTo::create(dt, ccp(dstPos.x-srcPos.x, dstPos.y - srcPos.y));
+			if(!pmv)
+				break;
 
-		CCRotateBy* protate = CCRotateBy::create(dt, 360);
-		if(!protate)
-			break;
+			CCRotateBy* protate = CCRotateBy::create(dt, 360);
+			if(!protate)
+				break;
 		
-		fightEffect->addActionToImage(pmv);
-		fightEffect->addActionToImage(protate);
-		fightEffect->setChildAnchorPoint(ccp(0.5,0.5));
-		fightEffect->beginAfterImage();
-		fightEffect->setPosition(srcPos);
+			fightEffect->addActionToImage(pmv);
+			fightEffect->addActionToImage(protate);
+			fightEffect->setChildAnchorPoint(ccp(0.5,0.5));
+			fightEffect->beginAfterImage();
+			fightEffect->setPosition(srcPos);
+			effcetNode = static_cast<CCNode*>(fightEffect);
+		}
+		else
+		{
+			CCSprite* psimg = CCMyHelper::createZeroAnchorFrameSprite(CFightEffectImg::getFrameName(effectID, effectSubID).c_str());
+			if(srcPos.x > dstPos.x) //反方向
+			{
+				psimg->setFlipX(true);
+			}
+			psimg->runAction(CCMoveTo::create(dt, ccp(dstPos.x-srcPos.x, dstPos.y - srcPos.y)));
+			psimg->setPosition(srcPos);
+			effcetNode = psimg;
+		}
 
 /*		CFightEffectImg* fightEffect = CFightEffect::create(effectID, effectSubID);
 		if(!fightEffect)
@@ -233,9 +264,11 @@ void CBattleWindowMap::showBullets(const char* bulletConf,
 
 		fightEffect->setPosition(srcPos);
 */
-		
-		this->addChild(fightEffect, 10);
-		CCEActionReleaser::create(fightEffect, this, CCDelayTime::create(dt));
+		if(effcetNode)
+		{
+			this->addChild(effcetNode, 10);
+			CCEActionReleaser::create(effcetNode, this, CCDelayTime::create(dt));
+		}
 
 	}while(0);
 }
@@ -289,20 +322,24 @@ bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 				break;
 			psrc->energy = atoi(pact->params(0).c_str());//同步能量
 
-			if(pact->subactions_size() == 0)
-				break;
+			vector<int> desids;
+			vector<int> dmgs;
+			for(int subi=0; subi<pact->subactions_size() ; ++subi)
+			{
+				BattleAction* psubact = pact->mutable_subactions(subi);
+				CBattleUnitLogic* pdst = this->getUnitLogicByMsgIdx(psubact->dstunitidxes(0));
+				if(pdst == NULL)
+					break;
 
-			BattleAction* psubact = pact->mutable_subactions(0);
-			CBattleUnitLogic* pdst = this->getUnitLogicByMsgIdx(psubact->dstunitidxes(0));
-			if(pdst == NULL)
-				break;
+				if(psubact->params_size() !=2)
+					break;
 
-			if(psubact->params_size() !=2)
-				break;
-
-			int dmg = atoi(psubact->params(0).c_str());
-			pdst->hp = atoi(psubact->params(1).c_str());//同步血量
-			doAttack(psrc->tagId, pdst->tagId, dmg, pact->id());
+				int dmg = atoi(psubact->params(0).c_str());
+				pdst->hp = atoi(psubact->params(1).c_str());//同步血量
+				desids.push_back(pdst->tagId);
+				dmgs.push_back(dmg);
+			}
+			doAttack(psrc->tagId, desids, dmgs, pact->id());
 			m_isPlaying = true;
 		}
 		else if(acttype==pact->ACTION_DIE)
@@ -321,14 +358,21 @@ bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 			if(pact->params_size() < 1)
 				break;
 
-			if(pact->params(0) == "3") //伤血的表现
+			CAutoSkillTab* pskillconf = TCONF_GET(CAutoSkillTab);
+			if(pskillconf == NULL)
+				break;
+
+			const char* strEffectType = pskillconf->getValue(CStrTool::strDecimal(pact->id()).c_str(), pskillconf->TYPE);
+			if(strEffectType == NULL)
+				break;
+
+			if(atoi(strEffectType) == 3) //伤血的表现
 			{
-				if(pact->params_size() != 4)
+				if(pact->params_size() != 3)
 					break;
 
-				//fromIdx = pact->params(1)
-				this->showDmg(psrc->tagId, atoi(pact->params(2).c_str()));
-				psrc->hp = atoi(pact->params(3).c_str());
+				this->showDmg(psrc->tagId, atoi(pact->params(1).c_str()));
+				psrc->hp = atoi(pact->params(2).c_str());
 				CBattleFightUnit* punit = getFightUnit(psrc->tagId);
 				if(punit == NULL)
 					break;
@@ -346,7 +390,12 @@ bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 			CBattleFightUnit* punit = getFightUnit(psrc->tagId);
 			if(punit == NULL)
 				break;
-			punit->addBuffIcon(pact->id(), pact->srcunitidx());
+
+			if(pact->params_size() < 2)
+			{
+				break;
+			}
+			punit->addBuffIcon(pact->id(), atoi(pact->params(0).c_str()), atoi(pact->params(1).c_str()));
 		}
 		else if(acttype == pact->ACTION_BUFF_END)
 		{
@@ -358,7 +407,7 @@ bool CBattleWindowMap::playFromMsg(CBattleFightMsg& msg)
 			CBattleFightUnit* punit = getFightUnit(psrc->tagId);
 			if(punit == NULL)
 				break;
-			punit->delBuffIcon(pact->id(), pact->srcunitidx());
+			punit->delBuffIcon(pact->id());
 		}
 		else
 			break;

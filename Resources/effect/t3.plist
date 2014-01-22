@@ -14,7 +14,7 @@
 		<key>t3.1 (1).png</key>
 		<dict>
 			<key>x</key>
-			<integer>151</integer>
+			<integer>66</integer>
 			<key>y</key>
 			<integer>1</integer>
 			<key>width</key>
@@ -33,7 +33,7 @@
 		<key>t3.2 (1).png</key>
 		<dict>
 			<key>x</key>
-			<integer>40</integer>
+			<integer>125</integer>
 			<key>y</key>
 			<integer>1</integer>
 			<key>width</key>
@@ -52,7 +52,7 @@
 		<key>t3.3 (1).png</key>
 		<dict>
 			<key>x</key>
-			<integer>1</integer>
+			<integer>185</integer>
 			<key>y</key>
 			<integer>1</integer>
 			<key>width</key>
@@ -109,9 +109,9 @@
 		<key>t3.6 (1).png</key>
 		<dict>
 			<key>x</key>
-			<integer>100</integer>
+			<integer>123</integer>
 			<key>y</key>
-			<integer>1</integer>
+			<integer>82</integer>
 			<key>width</key>
 			<integer>50</integer>
 			<key>height</key>
@@ -130,7 +130,7 @@
 			<key>x</key>
 			<integer>1</integer>
 			<key>y</key>
-			<integer>163</integer>
+			<integer>145</integer>
 			<key>width</key>
 			<integer>128</integer>
 			<key>height</key>
@@ -149,7 +149,7 @@
 			<key>x</key>
 			<integer>1</integer>
 			<key>y</key>
-			<integer>136</integer>
+			<integer>167</integer>
 			<key>width</key>
 			<integer>152</integer>
 			<key>height</key>
@@ -166,9 +166,9 @@
 		<key>t3.9 (1).png</key>
 		<dict>
 			<key>x</key>
-			<integer>123</integer>
+			<integer>1</integer>
 			<key>y</key>
-			<integer>82</integer>
+			<integer>194</integer>
 			<key>width</key>
 			<integer>123</integer>
 			<key>height</key>
@@ -181,6 +181,25 @@
 			<integer>130</integer>
 			<key>originalHeight</key>
 			<integer>42</integer>
+		</dict>
+		<key>t3.10 (1).png</key>
+		<dict>
+			<key>x</key>
+			<integer>0</integer>
+			<key>y</key>
+			<integer>0</integer>
+			<key>width</key>
+			<integer>64</integer>
+			<key>height</key>
+			<integer>63</integer>
+			<key>offsetX</key>
+			<real>0</real>
+			<key>offsetY</key>
+			<real>0</real>
+			<key>originalWidth</key>
+			<integer>64</integer>
+			<key>originalHeight</key>
+			<integer>63</integer>
 		</dict>
 	</dict>
 </dict>

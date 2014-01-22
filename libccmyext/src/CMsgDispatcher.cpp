@@ -195,7 +195,12 @@ bool CCEMsgDispatcher::registCmdHandle(int cmd, CCObject* target, SEL_CallFuncO 
 		}
 
 		if(invalidTarget)
+		{
+			::CCMessageBox(
+				string("CCEMsgDispatcher::registCmdHandle target existed: ").append(CStrTool::strDecimal(cmd)).c_str(),
+				"debug");
 			break;
+		}
 
 		pn = new HANDLE_NODE(target, selector, packCmdInMsg, priority);
 		if(pnToInsert)

@@ -300,6 +300,12 @@
     <ClInclude Include="..\inc\BattleLogicEffect.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\BattleMapAttackInfo.h">
+      <Filter>源文件\view\battle\fighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\BuffIconWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AppDelegate.cpp">
@@ -478,6 +484,9 @@
     </ClCompile>
     <ClCompile Include="..\src\BattleLogicEffect.cpp">
       <Filter>源文件\data\battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BuffIconWindow.cpp">
+      <Filter>源文件\view\common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

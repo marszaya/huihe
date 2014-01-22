@@ -12,6 +12,7 @@ CRoleBattleList::CRoleBattleList(void)
 	m_roleFormat = NULL;
 	m_roleDetail = NULL;
 	m_dialog = NULL;
+	this->initPostMsg(CMyControl::getSharedControl()->getDispatcher());
 	this->addPostMsg(CMyControl::CMD_DATA_UNIT_FIGHT_MAX);
 }
 
@@ -91,10 +92,16 @@ void CRoleBattleList::onFrameMsg(CCObject* msg)
 
 			m_dialog = CStdViewFactory::createDialog("reach fight max", 
 				CCUCommonDelegate::create(this, 
-					callfuncO_selector(CRoleBattleList::onDialogueClose)
+					callfuncO_selector(CRoleBattleList::onDialogueSave)
 				),
 				CStdViewFactory::DIALOG_TYPE_ALERT
-			);		
+			);
+
+			if(m_dialog != NULL)
+			{
+				CCMyHelper::setPosC(m_dialog, this->getWindowWidth()/2, this->getWindowHeight()/2);
+				this->addChild(m_dialog);
+			}
 		}
 	}while(0);
 }
@@ -232,14 +239,12 @@ void CRoleBattleList::onSave(CCObject* param)
 			const char* hintMsg = NULL;
 			if(!m_roleFormat->saveFormat())
 			{
-				//错误提示
-				hintMsg = "save errer";
+				//有異步消息 
+				break;
 			}
-			else
-			{
-				//成功提示
-				hintMsg = "save ok";
-			}
+		
+			//成功提示
+			hintMsg = "save ok";
 
 			if(m_dialog != NULL)
 			{
@@ -273,6 +278,7 @@ void CRoleBattleList::onDialogueClose(CCObject* param)
 		{
 			this->postMsgDirect(CMyControl::CMD_WINDOW_SELF_LOOP, NULL);
 		}
+
 	}while(0);
 }
 

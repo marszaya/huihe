@@ -1,4 +1,4 @@
-ï»¿#include "StdViewFactory.h"
+#include "StdViewFactory.h"
 #include "STRTABLE.h"
 #include "StrTool.h"
 #include "CNode9Grid.h"
@@ -42,7 +42,7 @@ CCMenu* CStdViewFactory::createCloseBtn(CCObject *rec, SEL_MenuHandler selector,
 
 void CStdViewFactory::initFactory()
 {
-	//é»˜è®¤å­—ä½“å®šä¹‰
+	//Ä¬ÈÏ×ÖÌå¶¨Òå
 	LABEL_FONT.color = ccWHITE;
 	LABEL_FONT.name = CONST_STR_FONT_LABEL;
 	LABEL_FONT.size = 16;

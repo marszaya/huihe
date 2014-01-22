@@ -31,7 +31,7 @@ void CLoginScene::onFrameMsg(CCObject* msg)
 {
 	this->removeAllChildrenWithCleanup(true);
 	CCLog("from CLoginScene to CMainLoadingScene");
-	CCScene *pScene = CCESceneWindow::createScene(new CMainLoadingScene, "preload.xml");
+	CCScene *pScene = CCESceneWindow::createScene(new CMainLoadingScene, "preload.plist");
 	if(pScene)
 	{
 		CCDirector::sharedDirector()->replaceScene(pScene);

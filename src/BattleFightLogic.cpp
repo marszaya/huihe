@@ -340,15 +340,18 @@ bool CBattleFightLogic::createEffectFromUnit(CBattleUnitLogic* ptarget, EFFECT_C
 	for(it=ptarget->buffs.begin(); it!=ptarget->buffs.end(); ++it)
 	{
 		CBattleLogicEffect* newBuffEffect = CBattleLogicEffectFactory::getInstance()->createEffectByBuff(&(*it));
-		if(newBuffEffect->getCondition() != condition)
+		if(newBuffEffect!=NULL)
 		{
-			delete newBuffEffect;
-		}
-		else 
-		{
-			if(!manager.addEffect(newBuffEffect))
+			if(newBuffEffect->getCondition() != condition)
 			{
 				delete newBuffEffect;
+			}
+			else 
+			{
+				if(!manager.addEffect(newBuffEffect))
+				{
+					delete newBuffEffect;
+				}
 			}
 		}
 	}

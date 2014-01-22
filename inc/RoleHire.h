@@ -9,7 +9,7 @@
 class CRoleHire:public CCEItemContainer
 {
 public:
-	const static int TABLE_ROW = 1;
+	const static int TABLE_ROW = 3;
 	const static int TABLE_COL = 2;
 public:
 	CRoleHire(void);

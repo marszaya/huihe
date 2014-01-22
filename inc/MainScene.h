@@ -31,15 +31,17 @@ public:
 
 	
 public:
+	CMainScene();
+
 	//menu callback function
 	void onBtn(CCObject* target);
 
 	//CMD callback
-	void onPopupClose(CCObject* target);
+	virtual void onFrameMsg(CCObject* msg);
 
 protected:
+
 	virtual bool showMainWindow();
-	virtual void onFrameMsg(CCObject* msg);
 
 	//设置主界面按钮
 	bool setBtn(int tag, const char* img, const char* img2, const CCPoint & initPos, CCMyHelper::POSITION_TYPE postype=CCMyHelper::POSITION_TYPE_CENTER);

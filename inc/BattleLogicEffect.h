@@ -5,6 +5,7 @@
 #include "StrTool.h"
 #include "mathTools.h"
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -99,6 +100,25 @@ public:
 class CBattleLogicEffectSkill: public CBattleLogicEffect
 {
 public:
+
+	enum BUFF_MATCH_CONDITION
+	{
+		BUFF_MATCH_EFFECT, //按效果type字段匹配
+		BUFF_MATCH_SEQ, //按SEQ字段匹配
+		BUFF_MATCH_SKILLID, //按技能id匹配 
+		BUFF_MATCH_FROMIDX //按照釋放buff的對象idx匹配
+	};
+
+	enum BUFF_MATCH_OPTION
+	{
+		BUFF_MATCH_FILTER_SKILLID_BIGER, //只有skillid大的生效
+		BUFF_MATCH_FILTER_SKILLID_BIGER_OR_EQUAL, //skillid>=
+		BUFF_MATCH_DISCARD, //丟棄
+		BUFF_MATCH_REPLACE, //替換
+		BUFF_MATCH_RESET_REMAIN, //重置剩餘次數
+		BUFF_MATCH_INCREASE_EFFECTCNT //增加生效次數
+	};
+
 	CBattleLogicEffectSkill();
 	virtual ~CBattleLogicEffectSkill();
 
@@ -106,6 +126,7 @@ public:
 	{
 		int skillid;
 		int skilltype;
+		int skillseq;
 		int cost;
 		vector<string> vparams;
 	};
@@ -124,8 +145,8 @@ public:
 	}
 
 protected:
-	void addBuff(CBattleUnitLogic* unit, bool unitIsSrc, CBattleUnitLogic::BUFF& buff,
-		EFFECT_ACTIVE_CONTEXT& con, int overlap);
+	void addBuff(CBattleUnitLogic* unit, bool unitIsSrc, CBattleUnitLogic::BUFF& buff, EFFECT_ACTIVE_CONTEXT& con,  
+		vector<BUFF_MATCH_CONDITION>& conditions, vector<BUFF_MATCH_OPTION>& options, int effectCntMax=1);
 
 	void srcCastBuff(EFFECT_ACTIVE_CONTEXT& con, CBattleUnitLogic::BUFF& newBuff);
 
@@ -182,7 +203,8 @@ public:
 	CBattleLogicEffectManager();
 	~CBattleLogicEffectManager();
 
-	typedef map<int, CBattleLogicEffect*> PRIORTY_MAP;
+	typedef vector<CBattleLogicEffect*> PRIORTY_MAP_ITEM;
+	typedef map<int, PRIORTY_MAP_ITEM*> PRIORTY_MAP;
 
 	//p必须是new出来的
 	bool addEffect(CBattleLogicEffect* p);

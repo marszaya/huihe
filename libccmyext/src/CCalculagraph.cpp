@@ -59,7 +59,7 @@ void CCUCalculagraph::getDt(cc_timeval* dtOut)
 string CCUCalculagraph::dtToStr(const cc_timeval* dt)
 {
 	char buff[64]={0};
-	sprintf(buff, "%d.%06d", dt->tv_sec, dt->tv_usec);
+	sprintf(buff, "%ld.%06d", dt->tv_sec, dt->tv_usec);
 	return buff;
 }
 

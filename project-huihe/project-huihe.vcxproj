@@ -114,6 +114,7 @@
     <ClInclude Include="..\inc\BattleLogicDef.h" />
     <ClInclude Include="..\inc\BattleLogicEffect.h" />
     <ClInclude Include="..\inc\BattleMap.h" />
+    <ClInclude Include="..\inc\BattleMapAttackInfo.h" />
     <ClInclude Include="..\inc\BattleMapScene.h" />
     <ClInclude Include="..\inc\battlemsg.pb.h" />
     <ClInclude Include="..\inc\BattleProcedureAttack.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="..\inc\BattleSkillLogic.h" />
     <ClInclude Include="..\inc\BattleSkillName.h" />
     <ClInclude Include="..\inc\BattleWindow.h" />
+    <ClInclude Include="..\inc\BuffIconWindow.h" />
     <ClInclude Include="..\inc\common.pb.h" />
     <ClInclude Include="..\inc\config.pb.h" />
     <ClInclude Include="..\inc\DataUtil.h" />
@@ -188,6 +190,7 @@
     <ClCompile Include="..\src\BattleSkillLogic.cpp" />
     <ClCompile Include="..\src\BattleSkillName.cpp" />
     <ClCompile Include="..\src\BattleWindow.cpp" />
+    <ClCompile Include="..\src\BuffIconWindow.cpp" />
     <ClCompile Include="..\src\common.pb.cc" />
     <ClCompile Include="..\src\config.pb.cc" />
     <ClCompile Include="..\src\DataUtil.cpp" />

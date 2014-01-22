@@ -1,5 +1,5 @@
 #include "logToFile.h"
-#include "windows.h"
+//#include "windows.h"
 
 CCULogToFile gTheGlobeLog;
 

@@ -1,5 +1,8 @@
 #pragma once
 #include "CActionManager.h"
+#include "BattleMapAttackInfo.h"
+#include <vector>
+using namespace std;
 
 class CBattleProcedureAttack:public CCEActionProcedure
 {
@@ -13,12 +16,9 @@ public:
 	virtual bool nextStep(int stepToCheck);
 
 public:
-	int m_dmg;
-	int m_srcTag;
-	int m_dstTag;
-	int m_skillId;
-	CCPoint m_srcPos;
-	CCPoint m_dstPos;
+	CBattleMapAttackInfo srcInfo;
+	vector<CBattleMapAttackInfo> dstInfos;
+	int skillId;
 	bool m_srcDone;
 	bool m_dstDone;
 };

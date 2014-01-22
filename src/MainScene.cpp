@@ -17,6 +17,50 @@
 #include "MyData.h"
 #include "BattleMapScene.h"
 
+CMainScene::CMainScene()
+{
+	//POPUP window close callback
+	this->initPostMsg(CMyControl::getSharedControl()->getDispatcher());
+	this->addPostMsg(CMyControl::CMD_MAINSCENE_POPUPCLOSE);
+}
+
+void CMainScene::onFrameMsg(CCObject* msg)
+{
+	do
+	{
+		int cmd = this->getCmdFromPostMsg(msg);
+		if(cmd == CMyControl::CMD_MAINSCENE_POPUPCLOSE)
+		{
+
+			CCNode* childToClose = dynamic_cast<CCNode*>(this->getParamFromPostMsg(msg));
+			if(childToClose)
+			{
+				this->removeChildOnNextFrame(childToClose);
+				enableBtns();
+			}
+		}
+		else if(cmd == CMyControl::CMD_WINDOW_SELF_LOOP)
+		{
+			if(m_nextSceneFlag == 1)
+			{
+				//初始地图
+				if(CMyData::getSharedData()->getCurrentMap() == 0)
+				{
+					CMyData::getSharedData()->setCurrentMap(1);
+				}
+
+				this->removeAllChildrenWithCleanup(true);
+				CCLog("from CMainScene to CBattleMapScene");
+				CCScene *pScene = CCESceneWindow::createScene(new CBattleMapScene);
+				if(pScene)
+				{
+					CCDirector::sharedDirector()->replaceScene(pScene);
+				}
+			}
+		}
+	}while(0);
+}
+
 bool CMainScene::showMainWindow()
 {
 	bool ret = false;
@@ -57,9 +101,6 @@ bool CMainScene::showMainWindow()
 		CCMyHelper::setPosTL(paw, 0, size.height);
 		this->addChild(paw, 0, CHILD_LAYER_ACCOUNT);
 
-		//POPUP window close callback
-		CMyControl::getSharedControl()->registCmdHandle(CMyControl::CMD_MAINSCENE_POPUPCLOSE, this, 
-			callfuncO_selector(CMainScene::onPopupClose));
 		ret = true;
 	}while(0);
 	return ret;
@@ -103,16 +144,6 @@ bool CMainScene::showMainWindow()
 		//pdmglabel->setOpacity(255);
 		//pdmglabel->setColor(ccc3(255,0,0));
 		this->addChild(pdmglabel);*/
-}
-
-void CMainScene::onPopupClose(CCObject* msg)
-{
-	CCNode* childToClose = dynamic_cast<CCNode*>(msg);
-	if(childToClose)
-	{
-		this->removeChildOnNextFrame(childToClose);
-	}
-	enableBtns();
 }
 
 void CMainScene::onBtn(CCObject* target)
@@ -238,24 +269,4 @@ void CMainScene::enableBtn(int tag)
 		DYNAMIC_CAST_CCASERT(node, CCMenu, pbtn);
 		pbtn->setEnabled(true);
 	}while(0);
-}
-
-void CMainScene::onFrameMsg(CCObject* msg)
-{
-	if(m_nextSceneFlag == 1)
-	{
-		//初始地图
-		if(CMyData::getSharedData()->getCurrentMap() == 0)
-		{
-			CMyData::getSharedData()->setCurrentMap(1);
-		}
-
-		this->removeAllChildrenWithCleanup(true);
-		CCLog("from CMainScene to CBattleMapScene");
-		CCScene *pScene = CCESceneWindow::createScene(new CBattleMapScene);
-		if(pScene)
-		{
-			CCDirector::sharedDirector()->replaceScene(pScene);
-		}
-	}
 }

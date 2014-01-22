@@ -6,6 +6,7 @@
 #include "StdViewFactory.h"
 #include "BattleFightMsg.h"
 #include "BattleFightTeam.h"
+#include "BattleMapAttackInfo.h"
 
 class CBattleSpeed;
 
@@ -16,6 +17,7 @@ class CBattleWindowMap:public CCEActionManager
 	friend class CBattleProcedureAttackRaged;
 
 public:
+
 	CBattleWindowMap(void);
 	virtual ~CBattleWindowMap(void);
 
@@ -57,7 +59,7 @@ public:
 
 protected:
 	int getSpd();
-	void doAttack(int srcTagId, int dstTagId, int dmg, int skillId=-1);
+	void doAttack(int srcTagId, vector<int>& dstTagIds, vector<int>& dmgs, int skillId=-1);
 	void showBullets(const char* bulletConf, 
 		 const CCPoint& srcPos,const CCPoint& dstPos,float* dtOut=NULL);
 

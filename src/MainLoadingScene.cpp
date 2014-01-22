@@ -64,7 +64,7 @@ bool CMainLoadingScene::beforePreloadWindow()
 		this->addChild(m_processView);
 		updateLable();
 
-		this->m_preloadFileNumPerFrame = 1;
+		this->m_preloadFileNumPerFrame = 5;
 		ret = true;
 	}while(0);
 	return ret;
